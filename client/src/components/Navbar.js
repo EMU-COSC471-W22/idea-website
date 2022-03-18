@@ -5,23 +5,12 @@ function Navbar() {
     return (
         <div>
             <nav>
-                <h1>THE IDEA</h1>
                 <ul>
-                    <li>
-                        <Link to='/'>Home</Link>
-                    </li>
-                    <li>
-                        <Link to='/gallery'>Gallery</Link>
-                    </li>
-                    <li>
-                        <Link to='/artists'>Artists</Link>
-                    </li>
-                    <li>
-                        <Link to='/about'>About</Link>
-                    </li>
-                    <li>
-                        <Link to='/contact'>Contact</Link>
-                    </li>
+                    <li> <Link className='nav-item' to='/'>THE IDEA</Link> </li>
+                    <li> <Link className='nav-item' to='/gallery'>Gallery</Link> </li>
+                    <li> <Link className='nav-item' to='/artists'>Artists</Link> </li>
+                    <li> <Link className='nav-item' to='/about'>About</Link> </li>
+                    <li> <Link className='nav-item' to='/contact'>Contact</Link> </li>
                 </ul>
             </nav>
 

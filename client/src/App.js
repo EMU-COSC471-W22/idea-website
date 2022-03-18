@@ -8,6 +8,9 @@ import About from './pages/About';
 import Contact from './pages/Contact';
 import NoPage from './pages/NoPage';
 
+import './styles/App.css';
+import './styles/Navbar.css';
+
 function App() {
     return (
         <BrowserRouter>
