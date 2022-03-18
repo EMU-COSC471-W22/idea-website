@@ -6,6 +6,7 @@ import Gallery from './pages/Gallery';
 import Artists from './pages/Artists';
 import About from './pages/About';
 import Contact from './pages/Contact';
+import Account from './pages/Account';
 import NoPage from './pages/NoPage';
 
 import './styles/App.css';
@@ -21,6 +22,7 @@ function App() {
                 <Route path='/artists' element={<Artists />} />
                 <Route path='/about' element={<About />} />
                 <Route path='/contact' element={<Contact />} />
+                <Route path='/account' element={<Account />} />
                 <Route path='*' element={<NoPage />} />
               </Route>
           </Routes>
