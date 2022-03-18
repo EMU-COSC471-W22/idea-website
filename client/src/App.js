@@ -6,7 +6,8 @@ import Gallery from './pages/Gallery';
 import Artists from './pages/Artists';
 import About from './pages/About';
 import Contact from './pages/Contact';
-import NoPage from './pages/NoPage';
+import NotFoundPage from './pages/NotFoundPage';
+import './styles/Gallery.css';
 
 function App() {
     return (
@@ -18,7 +19,7 @@ function App() {
                 <Route path='/artists' element={<Artists />} />
                 <Route path='/about' element={<About />} />
                 <Route path='/contact' element={<Contact />} />
-                <Route path='*' element={<NoPage />} />
+                <Route path='*' element={<NotFoundPage />} />
               </Route>
           </Routes>
       </BrowserRouter>
