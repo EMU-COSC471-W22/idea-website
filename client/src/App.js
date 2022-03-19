@@ -16,22 +16,23 @@ import './styles/App.css';
 import './styles/NavigationBar.css';
 
 function App() {
-    return (
-        <BrowserRouter>
-          <Routes>
-              <Route path='/' element={<NavigationBar />}>
-                <Route index element={<Home />} />
-                <Route path='/gallery' element={<Gallery />} />
-                <Route path='/artists' element={<Artists />} />
-                <Route path='/about' element={<About />} />
-                <Route path='/contact' element={<Contact />} />
-                <Route path='/account' element={<Account />} />
-                <Route path='/settings' element={<Settings />} />
-                <Route path='*' element={<PageNotFound />} />
-              </Route>
-          </Routes>
-      </BrowserRouter>
-    );
+
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path='/' element={<NavigationBar />}>
+          <Route index element={<Home />} />
+          <Route path='/gallery' element={<Gallery />} />
+          <Route path='/artists' element={<Artists />} />
+          <Route path='/about' element={<About />} />
+          <Route path='/contact' element={<Contact />} />
+          <Route path='/account' element={<Account />} />
+          <Route path='/settings' element={<Settings />} />
+          <Route path='*' element={<PageNotFound />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
 export default App;
