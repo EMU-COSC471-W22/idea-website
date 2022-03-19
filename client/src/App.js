@@ -4,6 +4,7 @@ import NavigationBar from './components/NavigationBar';
 import Home from './pages/Home';
 import Gallery from './pages/Gallery';
 import Artists from './pages/Artists';
+import Upload from './pages/Upload'
 import About from './pages/About';
 import Contact from './pages/Contact';
 import Account from './pages/Account';
@@ -24,6 +25,7 @@ function App() {
           <Route index element={<Home />} />
           <Route path='/gallery' element={<Gallery />} />
           <Route path='/artists' element={<Artists />} />
+          <Route path='/upload' element={<Upload />} />
           <Route path='/about' element={<About />} />
           <Route path='/contact' element={<Contact />} />
           <Route path='/account' element={<Account />} />
