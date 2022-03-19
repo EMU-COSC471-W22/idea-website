@@ -1,0 +1,44 @@
+
+.logo {
+    display: block;
+    color: #666666;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.logo:hover {
+    color: #444444;
+}
+
+.navbar {
+    padding-left: 12%;
+    padding-right: 12%;
+}
+
+.account-icon {
+    color: #666666;
+}
+
+.nav-items {
+    margin-right: 0 !important;
+}
+
+.nav-item {
+    color: #666666;
+    padding: 12px 16px;
+    text-decoration: none;
+}
+
+.profile-item {
+    color: #666666;
+    text-decoration: none;
+}
+
+.nav-item:hover {
+    color: #444444;
+}
+
+.dropdown-color a {
+    color: #666666 !important;
+}
