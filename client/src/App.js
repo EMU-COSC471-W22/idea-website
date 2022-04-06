@@ -9,9 +9,10 @@ import About from './pages/About';
 import Contact from './pages/Contact';
 import Account from './pages/Account';
 import Settings from './pages/Settings';
+import Admin from './pages/administration/Admin';
 import PageNotFound from './pages/PageNotFound';
 
-// Import styling
+/* Import styling */
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles/App.css';
 import './styles/NavigationBar.css';
@@ -30,6 +31,7 @@ function App() {
           <Route path='/contact' element={<Contact />} />
           <Route path='/account' element={<Account />} />
           <Route path='/settings' element={<Settings />} />
+          <Route path='/admin' element={<Admin />} />
           <Route path='*' element={<PageNotFound />} />
         </Route>
       </Routes>
