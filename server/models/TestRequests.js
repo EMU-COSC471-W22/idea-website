@@ -2,9 +2,14 @@ const sequelize = require("sequelize");
 
 module.exports = (sequelize, DataTypes) => {
 
-    const TestArt = sequelize.define("TestArt", {
+    const TestRequests = sequelize.define("TestRequests", {
+        artId: {
+           type: DataTypes.INTEGER,
+           autoIncrement: true,
+           primaryKey: true 
+        },
         artURL: {
-            type: DataTypes.STRING,
+            type: DataTypes.STRING(1234),
             allowNull: false
         },
         title: {
@@ -15,15 +20,18 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false
         },
-        dateCreated: {
-            type: DataTypes.DATEONLY,
-            allowNull: false
-        },
         description: {
             type: DataTypes.STRING,
             allowNull: false
+        },
+        status: {
+            type: DataTypes.STRING,
+            allowNull: false
         }
+    }, {
+        timestamps: false,
+        freezeTableName: true
     });
 
-    return TestArt;
+    return TestRequests;
 }

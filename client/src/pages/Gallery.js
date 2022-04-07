@@ -17,11 +17,10 @@ function Gallery() {
             <h1>Gallery Page</h1>
             {artPieces.map((value, key) => {
                 return (
-                    <div>
-                        <img src={value.art_url} alt="gallery piece" />
+                    <div key={key}>
+                        <img src={value.artURL} alt="gallery piece" />
                         <h2>{value.title}</h2>
-                        <h3>{value.artist_name}</h3>
-                        <h4>{value.date_created}</h4>
+                        <h3>{value.username}</h3>
                         <p>{value.description}</p>
                         <hr />
                     </div>

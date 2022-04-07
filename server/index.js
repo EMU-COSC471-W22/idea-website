@@ -10,10 +10,12 @@ const db = require('./models');
 // Routers
 const galleryRouter = require("./routes/Gallery");
 const uploadRouter = require("./routes/UploadRoute");
+const adminRouter = require("./routes/Admin");
 
 // Use route
 app.use("/gallery", galleryRouter);
 app.use("/upload", uploadRouter);
+app.use("/admin", adminRouter);
 
 // connecting database to port
 db.sequelize.sync().then(() => {
