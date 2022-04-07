@@ -11,6 +11,8 @@ import Account from './pages/Account';
 import Settings from './pages/Settings';
 import Admin from './pages/administration/Admin';
 import PageNotFound from './pages/PageNotFound';
+import Registration from './pages/Registration';
+import Login from './pages/Login';
 
 /* Import styling */
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -24,6 +26,8 @@ function App() {
       <Routes>
         <Route path='/' element={<NavigationBar />}>
           <Route index element={<Home />} />
+          <Route path='/login' element={<Login />} />
+          <Route path='/registration' element={<Register />} />
           <Route path='/gallery' element={<Gallery />} />
           <Route path='/artists' element={<Artists />} />
           <Route path='/upload' element={<Upload />} />
