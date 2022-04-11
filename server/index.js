@@ -8,14 +8,17 @@ app.use(cors());
 const db = require('./models');
 
 // Routers
-const galleryRouter = require("./routes/Gallery");
+const galleryRouter = require("./routes/GalleryRoute");
 const uploadRouter = require("./routes/UploadRoute");
-const adminRouter = require("./routes/Admin");
+const adminRouter = require("./routes/AdminRoute");
+const commentsRouter = require("./routes/CommentsRoute");
 
 // Use route
 app.use("/gallery", galleryRouter);
 app.use("/upload", uploadRouter);
 app.use("/admin", adminRouter);
+app.use("/comments", commentsRouter);
+
 
 // connecting database to port
 db.sequelize.sync().then(() => {

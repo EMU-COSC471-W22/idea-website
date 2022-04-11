@@ -1,0 +1,8 @@
+.comments {
+    overflow: hidden;
+    overflow-y: auto;
+}
+
+.comments::-webkit-scrollbar {
+  display: none;
+}
