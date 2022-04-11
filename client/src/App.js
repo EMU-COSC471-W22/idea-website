@@ -17,6 +17,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles/App.css';
 import './styles/NavigationBar.css';
 import './styles/Upload.css';
+import './styles/Contact.css';
 
 function App() {
 
