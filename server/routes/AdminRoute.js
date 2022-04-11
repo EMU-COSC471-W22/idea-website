@@ -16,7 +16,7 @@ router.get("/:artTableView", async (req, res) => {
         res.send(allArt);
     } else {
         /* Retrieves art catalog based on given status: pending, accepted, or declined */
-        const art = await db.sequelize.query("SELECT * FROM artpieces WHERE status= :newView", {
+        const art = await db.sequelize.query("SELECT * FROM artpieces WHERE status = :newView", {
             model: ArtPieces,
             mapToModel: true,
             replacements: {

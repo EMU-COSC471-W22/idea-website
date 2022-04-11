@@ -32,5 +32,12 @@ module.exports = (sequelize, DataTypes) => {
         timestamps: false
     });
 
+    ArtPieces.associate = (models) => {
+        ArtPieces.hasMany(models.Comments, {
+            onDelete: "CASCADE",
+            foreignKey: "artId"
+        });
+    }
+
     return ArtPieces;
 }
