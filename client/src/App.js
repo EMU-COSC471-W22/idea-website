@@ -16,6 +16,7 @@ import PageNotFound from './pages/PageNotFound';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles/App.css';
 import './styles/NavigationBar.css';
+import './styles/Upload.css';
 
 function App() {
 
