@@ -13,10 +13,4 @@ router.get("/", async (req, res) => {
     res.send(galleryArt);
 });
 
-router.post("/", async (req, res) => {
-    const post = req.body;
-    await TestArt.create(post);   // sequelize function to insert data
-    res.send(post);
-});
-
 module.exports = router;

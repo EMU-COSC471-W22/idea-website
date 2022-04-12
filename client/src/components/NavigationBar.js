@@ -1,12 +1,9 @@
 import React from 'react';
 import { Outlet, Link } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser } from '@fortawesome/free-solid-svg-icons';
 
 /* React Bootstrap Components */
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
-import NavDropdown from 'react-bootstrap/NavDropdown';
 import Container from 'react-bootstrap/Container';
 
 function NavigationBar() {
@@ -19,7 +16,7 @@ function NavigationBar() {
                     <Navbar.Collapse className='justify-content-end' id='responsive-navbar-nav'>
                         <Nav>
                             <Link className='nav-item' to='/gallery'>Gallery</Link>
-                            <Link className='nav-item' to='/upload'>Upload</Link>
+                            <Link className='nav-item' to='/upload'>Request</Link>
                             <Link className='nav-item' to='/about'>About</Link>
                             <Link className='nav-item' to='/contact'>Contact</Link>
                         </Nav>
