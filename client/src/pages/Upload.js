@@ -13,10 +13,10 @@ function Upload() {
     const [imageSelected, setImageSelected] = useState("");
     const [inputs, setInputs] = useState({
         title: "",
-        description: "",
+        description: ""
     });
     const [validated, setValidated] = useState(false);
-    const [formerrors, setFormErrors] = useState({});
+    const [artURL, setArtURL] = useState("");
 
     const handleChange = (event) => {
         const name = event.target.name;
@@ -43,22 +43,22 @@ function Upload() {
         formData.append("file", imageSelected);
         formData.append("upload_preset", "theideapreset");
 
-        if (validated === true) {
-            axios.post("https://api.cloudinary.com/v1_1/theidea/image/upload", formData).then((response) => {
-                console.log(response);
-                artURL = response.data.secure_url; 
-                axios.post("http://localhost:3001/upload", {title: inputs.title, description: inputs.description, artistName: inputs.artistName, artURL: artURL});
-        });
-            
-        alert("Your file is being uploaded!");
-        navigate('/');
-            
-        } 
+        axios.post("https://api.cloudinary.com/v1_1/theidea/image/upload", formData).then((response) => {
+            console.log(response);
+            artURL = response.data.secure_url; 
+            setArtURL(response.data.secure_url)
+            axios.post("http://localhost:3001/upload", {title: inputs.title, description: inputs.description, artistName: inputs.artistName, artURL: artURL});
+    
+            alert("Your file is being uploaded!");
+            navigate('/');
+                
+        }); 
+        // console.log(artURL);
     }
 
     return (
         <div>
-            <Form className="outline" noValidate validated={validated} onSubmit={handleSubmit}>
+            <Form className="outline" noValidate validated={validated}>
             <h2 className="artist-information">Art Information</h2>
                 <Row className="mb-3">
                     <Form.Group md="4" controlId="validationCustom01"> 
@@ -67,7 +67,7 @@ function Upload() {
                                 required
                                 type="text"
                                 name="artistName" 
-                                value={inputs.artistName || ""}
+                                value={inputs.artistName}
                                 onChange={handleChange}
                             />
                     </Form.Group>
@@ -100,7 +100,7 @@ function Upload() {
                 <div className="d-grid gap-2">
                     <Form.Control required type="file" onChange={(event) => (setImageSelected(event.target.files[0]))} accept="image/"/>
                 </div>
-                <Button className='upload-button' type="submit">Request Art</Button>
+                <Button className='upload-button' onClick={handleSubmit}>Request Art</Button>
             </Form>
         </div>
     );

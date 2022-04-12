@@ -7,7 +7,6 @@ import Card from 'react-bootstrap/Card';
 import Modal from 'react-bootstrap/Modal';
 import Image from 'react-bootstrap/Image';
 import Stack from 'react-bootstrap/Stack';
-import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 
 function Gallery() {
@@ -61,17 +60,18 @@ function Gallery() {
     }
 
     return (
-        <div>
-            <h1>Gallery Page</h1>
+        <div  >
+            <h1 style={{ textAlign: 'center' }}>Gallery</h1>
+            <div style={{ margin: 'auto', width: '80%', paddingTop: '3%' }}>
             {artPieces.map((value, index) => {
                 return (
                     <div>
-                        <Card key={index} onClick={() => handleShow(index, value.artId)}>
+                        <Card style={{ width: '25rem' }} key={index} onClick={() => handleShow(index, value.artId)}>
                             <Card.Img src={value.artURL}/>
                             <Card.Body>
                                 <Card.Title> {value.title} </Card.Title>
                                 <Card.Text>
-                                    <h3> {value.username} </h3>
+                                    <h3> {value.artistName} </h3>
                                     <p> {value.description} </p>
                                 </Card.Text>
                             </Card.Body>
@@ -82,7 +82,7 @@ function Gallery() {
                             <Modal.Body>
                                 <Image src={value.artURL} fluid/>
                                 <h1> {value.title} </h1>
-                                <p> {value.username} </p>
+                                <p> {value.artistName} </p>
                                 <p> {value.description} </p>
                                 <Stack direction='horizontal' gap={2} >
                                     <input 
@@ -110,6 +110,7 @@ function Gallery() {
                     
                 )
             })}
+            </div>
         </div>
         
     );

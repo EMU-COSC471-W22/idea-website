@@ -3,12 +3,9 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import NavigationBar from './components/NavigationBar';
 import Home from './pages/Home';
 import Gallery from './pages/Gallery';
-import Artists from './pages/Artists';
 import Upload from './pages/Upload'
 import About from './pages/About';
 import Contact from './pages/Contact';
-import Account from './pages/Account';
-import Settings from './pages/Settings';
 import Admin from './pages/administration/Admin';
 import PageNotFound from './pages/PageNotFound';
 

@@ -72,7 +72,7 @@ function ArtTable() {
                 artId: value.artId, 
                 artURL: value.artURL, 
                 title: value.title, 
-                username: value.username, 
+                artistName: value.artistName, 
                 description: value.description, 
                 status: newStatus
             } : value;
@@ -136,7 +136,7 @@ function ArtTable() {
                                     <td>{value.artId}</td>
                                     <td><a href={value.artURL}>{value.artURL}</a></td>
                                     <td>{value.title}</td>
-                                    <td>{value.username}</td>
+                                    <td>{value.artistName}</td>
                                     <td>{value.description}</td>
                                     <td>{value.status}</td>
                                     <td><Button variant="dark" onClick={() => handleShow(index)}>Review</Button></td>
@@ -157,7 +157,7 @@ function ArtTable() {
                                         <br />
                                         <Form.Group>
                                             <Form.Label>Artist Name</Form.Label>
-                                            <Form.Control placeholder={value.username} disabled/>
+                                            <Form.Control placeholder={value.artistName} disabled/>
                                         </Form.Group>
                                         <br />
                                         <Form.Group>

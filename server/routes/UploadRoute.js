@@ -1,7 +1,7 @@
 const express = require("express");
 const { QueryTypes } = require("sequelize");
 const router = express.Router();
-const { artTable } = require("../models"); // Importing necessary tables for route
+const { ArtPieces } = require("../models"); // Importing necessary tables for route
 const db = require('../models'); // Allows for use of sequelize.query functions
 
 router.post('/', async (req, res) => {
@@ -14,7 +14,7 @@ router.post('/', async (req, res) => {
     console.log(newTitle);
 
     await db.sequelize.query(
-        'INSERT INTO arttable (art_url, title, artist_name, description, status) VALUES (:artURL, :title, :artistName, :description, :status)', {
+        'INSERT INTO artpieces (artURL, title, artistName, description, status) VALUES (:artURL, :title, :artistName, :description, :status)', {
         replacements: {
             artURL: newArtURL,
             title: newTitle,

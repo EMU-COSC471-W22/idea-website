@@ -27,7 +27,7 @@ router.get("/:artId", async (req, res) => {
 router.post("/", async (req, res) => {
     const comment = req.body.commentBody;
     const artId = req.body.artId;
-    // const user = req.body.account;
+    
     await db.sequelize.query("INSERT INTO comments (commentBody, artId) VALUES (:commentBody, :id)", {
         replacements: {
             commentBody: comment,
