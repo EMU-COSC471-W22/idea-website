@@ -19,6 +19,7 @@ import './styles/NavigationBar.css';
 import './styles/Upload.css';
 import './styles/Contact.css';
 import './styles/About.css';
+import './styles/Home.css';
 
 function App() {
 
