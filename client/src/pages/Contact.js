@@ -1,15 +1,17 @@
 import React from 'react';
 
+/* Import the logo image */
+import Logo from '../images/theidealogo.png'
+
 function Contact() {
     return (
         <div class="contact-container">
-            <div >// style="text-align:center"
-                <h2>Contact Us</h2>
-                <p>Swing by for a cup of coffee, or leave us a message:</p>
+            <div>
+                <h2 className='margin-right'>Contact Us</h2>
             </div>
             <div class="row">
                 <div class="column">
-                    <img src="/w3images/map.jpg" alt="image"/>
+                    <img className='margin-right' src={ Logo } alt="image"/>
                 </div>
                 <div class="column">
                     <form action="/action_page.php">

@@ -2,6 +2,10 @@
     box-sizing: border-box;
 }
 
+.margin-right {
+    margin-left: 0.5em;
+}
+
 /* Style inputs */
 input[type=text], select, textarea {
     width: 100%;

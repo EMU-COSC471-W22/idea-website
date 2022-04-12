@@ -18,6 +18,7 @@ import './styles/App.css';
 import './styles/NavigationBar.css';
 import './styles/Upload.css';
 import './styles/Contact.css';
+import './styles/About.css';
 
 function App() {
 
@@ -27,12 +28,9 @@ function App() {
         <Route path='/' element={<NavigationBar />}>
           <Route index element={<Home />} />
           <Route path='/gallery' element={<Gallery />} />
-          <Route path='/artists' element={<Artists />} />
           <Route path='/upload' element={<Upload />} />
           <Route path='/about' element={<About />} />
           <Route path='/contact' element={<Contact />} />
-          <Route path='/account' element={<Account />} />
-          <Route path='/settings' element={<Settings />} />
           <Route path='/admin' element={<Admin />} />
           <Route path='*' element={<PageNotFound />} />
         </Route>

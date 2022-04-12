@@ -18,8 +18,8 @@
 
 .artist-information {
     margin-left: 0;
-    text-decoration: underline;
-    text-align: center;
+    /* text-decoration: underline; */
+    /* text-align: center; */
 }
 
 .image-placeholder {
@@ -28,12 +28,12 @@
 
 .upload-button {
     margin-top: 1em;
-    background-color: #04AA6D;
+    /* background-color: #04AA6D; */
 }
 
 .upload-button:hover{
     margin-top: 1em;
-    background-color: #45a049;  
+    /* background-color: #45a049;   */
 }
 
 .form-label {

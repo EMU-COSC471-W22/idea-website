@@ -22,7 +22,7 @@ function Upload() {
         const name = event.target.name;
         console.log(
             "handleChange -> " + event.target.name + " : " + event.target.value
-          );
+        );
         const value = event.target.value;
         setInputs(values => ({...values, [name]: value}))
     }
@@ -32,34 +32,26 @@ function Upload() {
         let artURL = "";
         const form = event.currentTarget;
 
-        // console.log(validated);
+        if (form.checkValidity() === false) {
+            event.preventDefault();
+            event.stopPropagation();
+            console.log(validated);
+        }
+
+        setValidated(true);
 
         formData.append("file", imageSelected);
         formData.append("upload_preset", "theideapreset");
 
-        if (form.checkValidity() === false) {
-            event.preventDefault();
-            // event.stopPropagation();
-            console.log(validated);
-            setValidated(true);
-        } 
-        setValidated(true);
-        if (!inputs.title || !inputs.description || imageSelected === "") {
-            setValidated(false);
-            console.log(validated);
-        } else {
-            setValidated(true);
-            console.log(validated);
-        }
         if (validated === true) {
             axios.post("https://api.cloudinary.com/v1_1/theidea/image/upload", formData).then((response) => {
                 console.log(response);
                 artURL = response.data.secure_url; 
                 axios.post("http://localhost:3001/upload", {title: inputs.title, description: inputs.description, artistName: inputs.artistName, artURL: artURL});
-            });
+        });
             
-            // alert("Your file is being uploaded!");
-            // navigate('/');
+        alert("Your file is being uploaded!");
+        navigate('/');
             
         } 
     }
@@ -67,9 +59,9 @@ function Upload() {
     return (
         <div>
             <Form className="outline" noValidate validated={validated} onSubmit={handleSubmit}>
-            <h1 className="artist-information">Art Information</h1>
+            <h2 className="artist-information">Art Information</h2>
                 <Row className="mb-3">
-                    {/* <Form.Group md="4" controlId="validationCustom01"> 
+                    <Form.Group md="4" controlId="validationCustom01"> 
                         <Form.Label>Artist name: </Form.Label>
                             <Form.Control
                                 required
@@ -78,7 +70,7 @@ function Upload() {
                                 value={inputs.artistName || ""}
                                 onChange={handleChange}
                             />
-                    </Form.Group> */}
+                    </Form.Group>
                     <Form.Group md="4">
                         <Form.Label>Art title: </Form.Label>
                             <Form.Control 
@@ -89,7 +81,7 @@ function Upload() {
                                 onChange={handleChange}
                             />
                             <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-                            {formerrors.title && (<p className="text-danger">{formerrors.title}</p>)}
+                            <Form.Control.Feedback type="invalid">Please Enter A Title.</Form.Control.Feedback>
                     </Form.Group>
                     <Form.Group className="d-grid gap-2" controlId="exampleForm.ControlTextarea1">
                         <Form.Label>Art description: </Form.Label>
@@ -108,7 +100,7 @@ function Upload() {
                 <div className="d-grid gap-2">
                     <Form.Control required type="file" onChange={(event) => (setImageSelected(event.target.files[0]))} accept="image/"/>
                 </div>
-                <Button className='upload-button' type="submit" onClick={handleSubmit}>Request Art</Button>
+                <Button className='upload-button' type="submit">Request Art</Button>
             </Form>
         </div>
     );
