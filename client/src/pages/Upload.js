@@ -99,8 +99,9 @@ function Upload() {
                 </Row>
                 <div className="d-grid gap-2">
                     <Form.Control required type="file" onChange={(event) => (setImageSelected(event.target.files[0]))} accept="image/"/>
+                    <Button className='upload-button' type="submit">Request Art</Button>
                 </div>
-                <Button className='upload-button' type="submit">Request Art</Button>
+                
             </Form>
         </div>
     );
