@@ -1,0 +1,45 @@
+/* body {
+    background-color: beige;
+} */
+.title {
+    text-align: center;
+    margin: 0.5em;
+}
+
+.outline {
+    border: 2px solid rgb(109, 105, 105);
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    margin: 5em;
+    margin-left: 5em;
+    margin-right: 5em;
+    padding: 20px;
+}
+
+.artist-information {
+    margin-left: 0;
+    /* text-decoration: underline; */
+    /* text-align: center; */
+}
+
+.image-placeholder {
+    position: absolute;
+}
+
+.upload-button {
+    margin-top: 1em;
+    /* background-color: #04AA6D; */
+}
+
+.upload-button:hover{
+    margin-top: 1em;
+    /* background-color: #45a049;   */
+}
+
+.form-label {
+    margin-top: 1em;
+}
+
+textarea.form-control {
+    resize: none;
+}
