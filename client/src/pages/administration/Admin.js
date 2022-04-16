@@ -8,7 +8,7 @@ import Tab from 'react-bootstrap/Tab';
 function Admin() {
     return(
         <div>
-            <h1>Admin Page</h1>
+            <h1 style={{ textAlign: 'center' }} >Administration</h1>
             <Tabs defaultActiveKey="art-pieces" id="uncontrolled-tab-example" className="mb-3">
                 <Tab eventKey="art-pieces" title="Art Pieces">
                     <ArtTable />

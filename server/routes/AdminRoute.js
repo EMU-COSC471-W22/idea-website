@@ -36,8 +36,8 @@ router.get("/:artTableView", async (req, res) => {
 /* Updates status of specified art piece */
 router.put("/changestatus", async (req, res) => {
     const status = req.body.status;
-    const artId = req.body.artId;
-    await db.sequelize.query("UPDATE artpieces SET status = :newStatus WHERE artId = :id", {
+    const artId = req.body.art_id;
+    await db.sequelize.query("UPDATE artpieces SET status = :newStatus WHERE art_id = :id", {
         replacements: {
             newStatus: status,
             id: artId

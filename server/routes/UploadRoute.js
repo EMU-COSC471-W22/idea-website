@@ -7,20 +7,20 @@ const db = require('../models'); // Allows for use of sequelize.query functions
 router.post('/', async (req, res) => {
     const newTitle = req.body.title;
     const newDescription = req.body.description;
-    const newArtistName = req.body.artistName;
-    const newArtURL = req.body.artURL;
+    const newArtURL = req.body.art_url;
     const status = "pending";
+    const newEmail = req.body.account_email;
 
     console.log(newTitle);
 
     await db.sequelize.query(
-        'INSERT INTO artpieces (artURL, title, artistName, description, status) VALUES (:artURL, :title, :artistName, :description, :status)', {
+        'INSERT INTO artpieces (art_url, title, description, status, account_email) VALUES (:artURL, :title, :description, :status, :accountEmail)', {
         replacements: {
             artURL: newArtURL,
             title: newTitle,
-            artistName: newArtistName,
             description: newDescription,
-            status: status
+            status: status,
+            accountEmail: newEmail,
         }, type: QueryTypes.INSERT 
     }, (err, result) => {
             if (err) {

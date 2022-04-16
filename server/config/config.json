@@ -2,7 +2,7 @@
   "development": {
     "username": "root",
     "password": "7#e-$e(0n|)_^^@N9()",
-    "database": "testdb",
+    "database": "theideadb",
     "host": "localhost",
     "dialect": "mysql"
   },

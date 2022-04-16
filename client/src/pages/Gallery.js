@@ -8,6 +8,9 @@ import Modal from 'react-bootstrap/Modal';
 import Image from 'react-bootstrap/Image';
 import Stack from 'react-bootstrap/Stack';
 import Button from 'react-bootstrap/Button';
+import CardGroup from 'react-bootstrap/CardGroup';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 
 function Gallery() {
     const [artPieces, setArtPieces] = useState([]);
@@ -63,53 +66,53 @@ function Gallery() {
         <div  >
             <h1 style={{ textAlign: 'center' }}>Gallery</h1>
             <div style={{ margin: 'auto', width: '80%', paddingTop: '3%' }}>
-            {artPieces.map((value, index) => {
-                return (
-                    <div>
-                        <Card style={{ width: '25rem' }} key={index} onClick={() => handleShow(index, value.artId)}>
-                            <Card.Img src={value.artURL}/>
-                            <Card.Body>
-                                <Card.Title> {value.title} </Card.Title>
-                                <Card.Text>
-                                    <h3> {value.artistName} </h3>
-                                    <p> {value.description} </p>
-                                </Card.Text>
-                            </Card.Body>
-                        </Card>
+            <Row xs={1} sm={2} md={3} className="g-4">
+                {artPieces.map((value, index) => {
+                    return (
+                        <Col>
+                            <Card style={{ display: 'inlineBlock' }} key={index} onClick={() => handleShow(index, value.art_id)}>
+                                <Card.Img src={value.art_url}/>
+                                <Card.Body>
+                                    <Card.Title> {value.title} </Card.Title>
+                                    <Card.Text>
+                                        <h3> {value.account_email} </h3>
+                                        <p> {value.description} </p>
+                                    </Card.Text>
+                                </Card.Body>
+                            </Card>
 
-                        <Modal centered size="lg" backdrop="static" show={show[index]} onHide={() => handleClose(index)} >
-                            <Modal.Header closeButton></Modal.Header>
-                            <Modal.Body>
-                                <Image src={value.artURL} fluid/>
-                                <h1> {value.title} </h1>
-                                <p> {value.artistName} </p>
-                                <p> {value.description} </p>
-                                <Stack direction='horizontal' gap={2} >
-                                    <input 
-                                        type="text" 
-                                        value={newComment} 
-                                        className="me-auto" 
-                                        placeholder="Add your comment here..." 
-                                        onChange={(event) => {
-                                            setNewComment(event.target.value)
-                                        }}
-                                    />
-                                    <Button onClick={addComment}>Send</Button>
-                                </Stack>
-                                <br />
-                                <Stack gap={2} className='comments'>
-                                    {comments.length > 0 && comments.map((comment, index) => {
-                                        return (
-                                            <div key={index} className="bg-light border">{comment.commentBody}</div>
-                                        );
-                                    })}
-                                </Stack>
-                            </Modal.Body>
-                        </Modal>
-                    </div>
-                    
-                )
-            })}
+                            <Modal centered size="lg" backdrop="static" show={show[index]} onHide={() => handleClose(index)} >
+                                <Modal.Header closeButton></Modal.Header>
+                                <Modal.Body>
+                                    <Image src={value.art_url} fluid/>
+                                    <h1> {value.title} </h1>
+                                    <p> {value.account_email} </p>
+                                    <p> {value.description} </p>
+                                    <Stack direction='horizontal' gap={2} >
+                                        <input 
+                                            type="text" 
+                                            value={newComment} 
+                                            className="me-auto" 
+                                            placeholder="Add your comment here..." 
+                                            onChange={(event) => {
+                                                setNewComment(event.target.value)
+                                            }}
+                                        />
+                                        <Button onClick={addComment}>Send</Button>
+                                    </Stack>
+                                    <br />
+                                    <Stack gap={2} className='comments'>
+                                        {comments.length > 0 && comments.map((comment, index) => {
+                                            return (
+                                                <div key={index} className="bg-light border">{comment.comment_body}</div>
+                                            );
+                                        })}
+                                    </Stack>
+                                </Modal.Body>
+                            </Modal>
+                        </Col>
+                )})}
+            </Row>
             </div>
         </div>
         

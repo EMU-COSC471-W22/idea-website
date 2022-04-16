@@ -69,12 +69,12 @@ function ArtTable() {
         setArtToDisplay(artToDisplay.map((value, key) => {
             return value.artId === affectedArtId ? 
             { 
-                artId: value.artId, 
-                artURL: value.artURL, 
-                title: value.title, 
-                artistName: value.artistName, 
+                art_id: value.art_id, 
+                art_url: value.art_url, 
+                title: value.title,
                 description: value.description, 
-                status: newStatus
+                status: newStatus,
+                account_email: value.account_email
             } : value;
         }));
     }
@@ -133,10 +133,10 @@ function ArtTable() {
                         return(
                             <>
                                 <tr key={index}>
-                                    <td>{value.artId}</td>
-                                    <td><a href={value.artURL}>{value.artURL}</a></td>
+                                    <td>{value.art_id}</td>
+                                    <td><a href={value.art_url}>{value.art_url}</a></td>
                                     <td>{value.title}</td>
-                                    <td>{value.artistName}</td>
+                                    <td>{value.account_email}</td>
                                     <td>{value.description}</td>
                                     <td>{value.status}</td>
                                     <td><Button variant="dark" onClick={() => handleShow(index)}>Review</Button></td>
@@ -145,10 +145,10 @@ function ArtTable() {
                                 {/* Modal appears when 'Review' button has been clicked for specific row */}
                                 <Modal centered size="lg" backdrop="static" show={show[index]} onHide={() => handleClose(index)}>
                                     <Modal.Header closeButton>
-                                        <Modal.Title>Art Piece #{value.artId}</Modal.Title>
+                                        <Modal.Title>Art Piece #{value.arti_id}</Modal.Title>
                                     </Modal.Header>
                                     <Modal.Body>
-                                        <Image  src={value.artURL} alt="" fluid/>
+                                        <Image  src={value.art_url} alt="" fluid/>
                                         <br /><br />
                                         <Form.Group>
                                             <Form.Label>Title</Form.Label>
@@ -157,7 +157,7 @@ function ArtTable() {
                                         <br />
                                         <Form.Group>
                                             <Form.Label>Artist Name</Form.Label>
-                                            <Form.Control placeholder={value.artistName} disabled/>
+                                            <Form.Control placeholder={value.account_email} disabled/>
                                         </Form.Group>
                                         <br />
                                         <Form.Group>
@@ -169,8 +169,8 @@ function ArtTable() {
                                     </Modal.Body>
                                     <Modal.Footer>
                                         <Button variant="secondary" onClick={() => handleClose(index)}>Close</Button>
-                                        <Button variant="success" onClick={() => changeStatus(accepted, value.artId)}>Accept</Button>
-                                        <Button variant="danger" onClick={() => changeStatus(declined, value.artId)}>Decline</Button>
+                                        <Button variant="success" onClick={() => changeStatus(accepted, value.art_id)}>Accept</Button>
+                                        <Button variant="danger" onClick={() => changeStatus(declined, value.art_id)}>Decline</Button>
                                     </Modal.Footer>
                                 </Modal>
                             </>
