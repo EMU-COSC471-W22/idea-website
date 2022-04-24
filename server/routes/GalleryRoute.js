@@ -6,10 +6,11 @@ const db = require('../models');    // allows for use of sequelize.query functio
 
 /* Gallery page only displays art that has been accepted */
 router.get("/", async (req, res) => {
-    const galleryArt = await db.sequelize.query("SELECT * FROM artpieces WHERE status='accepted'", {
+    const galleryArt = await db.sequelize.query("SELECT * FROM artpieces INNER JOIN accounts ON artpieces.account_username = accounts.username WHERE status='accepted'", {
         model: ArtPieces,
         mapToModel: true
     });
+    console.log(galleryArt);
     res.send(galleryArt);
 });
 

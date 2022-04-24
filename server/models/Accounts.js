@@ -1,13 +1,9 @@
 module.exports = (sequelize, DataTypes) => {
 
     const Accounts = sequelize.define("Accounts", {
-        email: {
-            type: DataTypes.STRING,
-            primaryKey: true,
-            allowNull: false
-        },
         username: {
             type: DataTypes.STRING,
+            primaryKey: true,
             allowNull: false
         },
         password: {
@@ -35,13 +31,13 @@ module.exports = (sequelize, DataTypes) => {
         /* Gives the art_pieces table the foreign key account_email */
         Accounts.hasMany(models.ArtPieces, {
             onDelete: "CASCADE",
-            foreignKey: "account_email"
+            foreignKey: "account_username"
         });
 
         /* Gives the comments table the foreign key account_email */
         Accounts.hasMany(models.Comments, {
             onDelete: "CASCADE",
-            foreignKey: "account_email"
+            foreignKey: "account_username"
         });
     }
 

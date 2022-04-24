@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router';
 import axios from 'axios';
+import { Formik, Form, Field } from 'formik';
+import * as Yup from 'yup';
 
-import Form from 'react-bootstrap/Form';
+// import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
@@ -12,118 +14,99 @@ import Stack from 'react-bootstrap/Stack';
 function Registration() {
 
     const navigate = useNavigate();
-    const [validated, setValidated] = useState(false);
-    const [inputs, setInputs] = useState({});
+    const [isTaken, setIsTaken] = useState(false);
 
-    const handleChange = (event) => {
-        const name = event.target.name;
-        const value = event.target.value;
-        setInputs((values) => ({...values, [name]: value}));
+    const registerUser = (data) => {
+        /* A successful registration will take you to the home page */
+        axios.post("http://localhost:3001/auth", data).then(() => {
+            console.log(data);
+        });
+        navigate('/login');
     }
 
-    const handleSubmit = (event) => {
-        const form = event.currentTarget;
-        if (form.checkValidity() === false) {
-            event.preventDefault();
-            event.stopPropagation();
+    const validateUsername = (value) => {
+
+        /* Checks to see if username is taken */
+        axios.post("http://localhost:3001/auth/users", {username: value}).then((response) => {
+            
+            /* If the username does not exist in the table, it will return and empty array */
+            if (response.data.length !== 0) {
+                setIsTaken(true);
+            } else {
+                setIsTaken(false);
+            }
+            
+        });
+        
+        let error;
+        if (isTaken) {
+            error = "Username is taken!"
         }
+        return error;
+        
+    }
 
-        setValidated(true);
+    /* Formik and Yup */
+    const validationSchema = Yup.object().shape({
+        firstName: Yup.string().min(2, 'Too Short!').max(50, "Too Long!").required("First name is required"),
+        lastName: Yup.string().min(2, 'Too Short!').max(50, "Too Long!").required("Last name is required"),
+        username: Yup.string().min(3, 'Too Short!').max(50, "Too Long!").required("Username is required"),
+        password: Yup.string().min(3, 'Too Short!').max(50, "Too Long!").required("Password is required"),
+        passwordConfirmation: Yup.string().oneOf([Yup.ref('password'), null], "Passwords do not match!").required("Please confirm your password")
+    })
 
-        axios.post("http://localhost:3001/auth", {
-            newFirstName: inputs.fName, 
-            newLastName: inputs.lName, 
-            newUsername: inputs.username, 
-            newEmail: inputs.email, 
-            newPassword: inputs.password}).then((response) => {
-                navigate('/');
-            });
+    const initialValues = {
+        firstName: "",
+        lastName: "",
+        username: "",
+        password: "",
+        passwordConfirmation: ""
     }
 
     return (
-        <div className='border container mt-5 ml-3' >
-            <h2 className='mt-4' >Registration</h2>
-            <Form noValidate validated={validated}>
-                <Form.Group as={Row} className="mb-3">
-                    <Form.Label   column sm={2}>First Name</Form.Label>
-                    <Col sm={10}>
-                        <Form.Control
-                            required
-                            type="text"
-                            name="fName"
-                            value={inputs.fName}
-                            placeholder="First name"
-                            onChange={handleChange}
-                            className="mb-1"
-                        />
-                        <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-                        <Form.Control.Feedback type="invalid">Please enter your first name</Form.Control.Feedback>
-                    </Col>
-                </Form.Group>
-                <Form.Group as={Row} className="mb-3">
-                    <Form.Label column sm={2}>Last Name</Form.Label>
-                    <Col sm={10}>
-                        <Form.Control 
-                            required
-                            type="text"
-                            name="lName"
-                            value={inputs.lName}
-                            placeholder="Last name"
-                            onChange={handleChange}
-                            className="mb-1"
-                        />
-                        <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-                        <Form.Control.Feedback type="invalid">Please enter your last name</Form.Control.Feedback>
-                    </Col> 
-                </Form.Group>
-                <Form.Group as={Row} className="mb-3">
-                    <Form.Label column sm={2}>Username</Form.Label>
-                    <Col sm={10}>
-                        <Form.Control 
-                            required
-                            type="text"
-                            name="username"
-                            value={inputs.username}
-                            placeholder="Create a username"
-                            onChange={handleChange}
-                            className="mb-1"
-                        />
-                        <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-                        <Form.Control.Feedback type="invalid">Please enter a username</Form.Control.Feedback>
-                    </Col> 
-                </Form.Group>
-                <Form.Group as={Row} className="mb-3">
-                    <Form.Label style={{marginTop: 0}} column sm={2}>Email</Form.Label>
-                    <Col sm={10}>
-                        <Form.Control 
-                            required
-                            type="email"
-                            name="email"
-                            value={inputs.email}
-                            placeholder="Enter your email"
-                            onChange={handleChange}
-                        />
-                        <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-                        <Form.Control.Feedback type="invalid">Please enter a valid email</Form.Control.Feedback>
-                    </Col>
-                </Form.Group>
-                <Form.Group as={Row} className="mb-3">
-                    <Form.Label style={{marginTop: 0}} column sm={2}>Create a Password</Form.Label>
-                    <Col sm={10}>
-                        <Form.Control
-                            required
-                            type="password"
-                            name="password"
-                            value={inputs.password}
-                            placeholder="Enter a password"
-                            onChange={handleChange}
-                        />
-                        <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-                        <Form.Control.Feedback type="invalid">Please create a password</Form.Control.Feedback>
-                    </Col>
-                </Form.Group>
-                <Button className="mb-3 row justfify-content-center" onClick={handleSubmit}>Register</Button>   
-            </Form>
+        <div className='outline container-sm my-5' style={{"maxWidth": "22rem"}}>
+            <h2>Registration</h2>
+            <Formik
+                initialValues={initialValues}
+                onSubmit={registerUser}
+                validationSchema={validationSchema}
+            >
+                {({ errors, touched, isValidating }) => (
+                    <Form>
+                        <div className='mb-1'>
+                            <label className='form-label'>First Name</label>
+                            <Field name="firstName" className="form-control"/>
+                            {errors.firstName && touched.firstName && <div className='text-danger'>{errors.firstName}</div>}
+                            {!errors.firstName && touched.firstName && <div className='text-success'>Looks good!</div>}
+                        </div>
+                        <div className='mb-1'>
+                            <label className='form-label'>Last Name</label>
+                            <Field name="lastName" className="form-control"/>
+                            {errors.lastName && touched.lastName && <div className='text-danger'>{errors.lastName}</div>}
+                            {!errors.lastName && touched.lastName && <div className='text-success'>Looks good!</div>}
+                        </div>
+                        <div className='mb-1'>
+                            <label className='form-label'>Create a username</label>
+                            <Field name="username" validate={validateUsername} className="form-control"/>
+                            {errors.username && touched.username && <div className='text-danger'>{errors.username}</div>}
+                            {!errors.username && touched.username && <div className='text-success'>Username is valid!</div>}
+                        </div>
+                        <div className='mb-1'>
+                            <label className='form-label'>Create a password</label>
+                            <Field name="password" type="password" className="form-control"/>
+                            {errors.password && touched.password && <div className='text-danger'>{errors.password}</div>}
+                            {!errors.password && touched.password && <div className='text-success'>Password is valid!</div>}
+                        </div>
+                        <div className='mb-1'>
+                            <label className='form-label'>Confirm password</label>
+                            <Field name="passwordConfirmation" type="password" className="form-control"/>
+                            {errors.passwordConfirmation && touched.passwordConfirmation && <div className='text-danger'>{errors.passwordConfirmation}</div>}
+                            {!errors.passwordConfirmation && touched.passwordConfirmation && <div className='text-success'>Password matches!</div>}
+                        </div>
+                        <button type="submit" className="btn btn-primary my-3">Register</button>
+                    </Form>
+                )}
+            </Formik>
         </div>
     );
 }

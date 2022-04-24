@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false
         },
         comment_body: {
-            type: DataTypes.STRING(255),
+            type: DataTypes.STRING(2200),
             allowNull: false
         }
     }, {

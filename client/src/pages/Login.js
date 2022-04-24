@@ -1,72 +1,69 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { AuthContext } from '../helpers/AuthContext';
 import { useNavigate } from 'react-router';
 import axios from 'axios';
+import { Formik, Form, Field } from 'formik';
+import * as Yup from 'yup';
 
-import Form from 'react-bootstrap/Form';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import Button from 'react-bootstrap/Button';
+/* React Bootstrap Components */
+import Alert from 'react-bootstrap/Alert';
 
 function Login() {
     const navigate = useNavigate();
-    const [validated, setValidated] = useState(false);
-    const [inputs, setInputs] = useState({});
+    const [show, setShow] = useState(false);
+    const [loginError, setLoginError] = useState("");
+    const { setAuthState } = useContext(AuthContext);
 
-    const handleChange = (event) => {
-        const name = event.target.name;
-        const value = event.target.value;
-        setInputs((values) => ({...values, [name]: value}));
-    }
-
-    const handleSubmit = (event) => {
-        const form = event.currentTarget;
-        if (form.checkValidity() === false) {
-            event.preventDefault();
-            event.stopPropagation();
-        }
-
-        setValidated(true);
-
-        axios.post("http://localhost:3001/auth/login", { email: inputs.email, password: inputs.password}).then((response) => {
-            // navigate('/');
-            console.log(response.data);
+    const login = (data) => {
+        setShow(false);
+        axios.post("http://localhost:3001/auth/login", data).then((response) => {
+            
+            if (response.data.error) {
+                setLoginError(response.data.error);
+                setShow(true);
+            } else {
+                localStorage.setItem("accessToken", response.data);
+                setAuthState(true);
+                navigate('/');
+            }
         });
     }
 
+    const validationSchema = Yup.object().shape({
+        username: Yup.string().required("Please enter your username"),
+        password: Yup.string().required("Please enter your password")
+    })
+
+    const initialValues = {
+        username: "",
+        password: ""
+    }
+
     return(
-        <div className='border container mt-5' >
-            <h2 className='mt-4'>Log In</h2>
-            <Form.Group as={Row} className="mb-3">
-                <Form.Label style={{marginTop: 0}} column sm={2}>Email</Form.Label>
-                <Col sm={10}>
-                    <Form.Control 
-                        required
-                        type="email"
-                        name="email"
-                        value={inputs.email}
-                        placeholder="Enter your email"
-                        onChange={handleChange}
-                    />
-                    <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-                    <Form.Control.Feedback type="invalid">Please enter a valid email</Form.Control.Feedback>
-                </Col>
-            </Form.Group>
-            <Form.Group as={Row} className="mb-3">
-                <Form.Label style={{marginTop: 0}} column sm={2}>Password</Form.Label>
-                <Col sm={10}>
-                    <Form.Control
-                        required
-                        type="password"
-                        name="password"
-                        value={inputs.password}
-                        placeholder="Enter your password"
-                        onChange={handleChange}
-                    />
-                    <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-                    <Form.Control.Feedback type="invalid">Please enter a valid password</Form.Control.Feedback>
-                </Col>
-            </Form.Group>
-            <Button className="mb-3 row justfify-content-center" onClick={handleSubmit}>Log In</Button>
+        <div className='outline container-sm my-5' style={{"maxWidth": "22rem"}}>
+            <h2>Log In</h2>
+            <Alert show={show} variant="danger"> <p> {loginError} </p> </Alert>
+            <Formik 
+                initialValues={initialValues}
+                onSubmit={login}
+                validationSchema={validationSchema}
+            >
+                {({ errors, touched, isValidating }) => (
+                    <Form>
+                        <div className='mb-1'>
+                            <label className='form-label'>Username</label>
+                            <Field name="username" className="form-control" />
+                            {errors.username && touched.username && <div className='text-danger'>{errors.username}</div>}
+                        </div>
+                        <div className='mb-1'>
+                            <label className='form-label'>Password</label>
+                            <Field name="password" className="form-control" type="password"/>
+                            {errors.password && touched.password && <div className='text-danger'>{errors.password}</div>}
+                        </div>
+                        <button type="submit" className="btn btn-primary my-3">Log In</button>
+                    </Form>
+                )}
+            </Formik>
         </div>
     );
 }
