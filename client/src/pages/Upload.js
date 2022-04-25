@@ -76,7 +76,7 @@ function Upload() {
 
     return (
         <div className='outline container-sm my-5' style={{"maxWidth": "50rem"}}>
-            {!authState ? <p>Please <a href="/login">log in</a> or <a href="/registration">sign up</a> to request an art piece for the gallery.</p> :
+            {!authState.status ? <p>Please <a href="/login">log in</a> or <a href="/registration">sign up</a> to request an art piece for the gallery.</p> :
                 <>
                     <h2>Art Request Form</h2>
                     <Formik

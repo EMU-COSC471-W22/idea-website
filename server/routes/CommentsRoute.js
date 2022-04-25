@@ -33,19 +33,40 @@ router.post("/", validateToken, async (req, res) => {
 
     const username = req.user.username;
 
-    await db.sequelize.query("INSERT INTO comments (comment_body, art_id, account_username) VALUES (:commentBody, :id, :accountUsername)", {
+    const keys = await db.sequelize.query("INSERT INTO comments (comment_body, art_id, account_username) VALUES (:commentBody, :id, :accountUsername)", {
         replacements: {
             commentBody: comment,
             id: artId,
             accountUsername: username
         }, type: QueryTypes.INSERT
+    });
+
+    const newComment = await db.sequelize.query("SELECT * FROM comments INNER JOIN accounts ON comments.account_username = accounts.username WHERE comment_id = :id ORDER BY comments.comment_id", {
+        // model: Comments,
+        // mapToModel: true,
+        replacements: {
+            id: keys[0]
+        }
+    });
+    console.log(newComment);
+    res.send(newComment[0]);
+});
+
+router.delete("/:commentId", validateToken, async (req, res) => {
+    const commentToDelete = req.params.commentId;
+
+    await db.sequelize.query("DELETE FROM comments WHERE comment_id = :commentId", {
+        replacements: {
+            commentId: commentToDelete
+        }, type: QueryTypes.DELETE
     }, (err, result) => {
         if (err) {
             console.log(err);
         } else {
             res.send(result);
         }
-    })
-})
+    });
+    res.send("Comment deleted");
+});
 
 module.exports = router;

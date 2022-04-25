@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const { ArtPieces } = require("../models"); // importing necessary tables for route
+const { ArtPieces, Accounts } = require("../models"); // importing necessary tables for route
+const { QueryTypes } = require("sequelize");
 const db = require('../models');    // allows for use of sequelize.query functions
 const { route } = require("./AccountsRoute");
 const { validateToken } = require("../middlewares/AuthMiddleware");
@@ -16,7 +17,7 @@ router.get("/verification", validateToken, async (req, res) => {
 })
 
 /* Gets ArtPieces table and filters by given status */
-router.get("/:artTableView", async (req, res) => {
+router.get("/art/view/:artTableView", async (req, res) => {
     const view = req.params.artTableView;
     
     if (view === "all") {
@@ -43,10 +44,10 @@ router.get("/:artTableView", async (req, res) => {
         });
         res.send(art);
     }
-})
+});
 
 /* Updates status of specified art piece */
-router.put("/changestatus", async (req, res) => {
+router.put("/art/changestatus", async (req, res) => {
     const status = req.body.status;
     const artId = req.body.artId;
     await db.sequelize.query("UPDATE artpieces SET status = :newStatus WHERE art_id = :id", {
@@ -61,6 +62,68 @@ router.put("/changestatus", async (req, res) => {
             res.send(result);
         }
     }); 
+});
+
+router.get("/accounts", async (req, res) => {
+    const allAccounts = await db.sequelize.query("SELECT username, first_name, last_name, type FROM accounts ORDER BY type, username", {
+        model: Accounts,
+        mapToModel: true
+    });
+    res.send(allAccounts);
+});
+
+router.put("/account/changetype", async (req, res) => {
+    const newType = req.body.type;
+    const affectedUsername = req.body.username;
+
+    await db.sequelize.query("UPDATE accounts SET type = :newType WHERE username = :username", {
+        replacements: {
+            newType: newType,
+            username: affectedUsername
+        }
+    }, (err, result) => {
+        if (err) {
+            console.log(err);
+        } else {
+            res.send(result);
+        }
+    });
+})
+
+router.delete("/art/remove/:artId", async (req, res) => {
+    const artToDelete = req.params.artId;
+
+    await db.sequelize.query("DELETE FROM artpieces WHERE art_id = :affectedArtId", {
+        replacements: {
+            affectedArtId: artToDelete
+        }, type: QueryTypes.DELETE
+    }, (err, result) => {
+        if (err) {
+            console.log(err);
+        } else {
+            res.send(result);
+        }
+    });
+
+    res.send("Art piece was deleted");
+});
+
+router.delete("/account/remove/:username", async (req, res) => {
+    const accountToDelete = req.params.username;
+
+    await db.sequelize.query("DELETE FROM accounts WHERE username = :affectedUsername", {
+        replacements: {
+            affectedUsername: accountToDelete
+        }, type: QueryTypes.DELETE
+    }, (err, result) => {
+        if (err) {
+            console.log(err);
+        } else {
+            res.send(result);
+        }
+    });
+
+    res.send("Account was deleted");
 });
 
 module.exports = router;

@@ -11,6 +11,9 @@ import Form from 'react-bootstrap/Form';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import ToggleButton from 'react-bootstrap/ToggleButton';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
+
 function ArtTable() {
     
     /* Holds state of current art to be displayed in the table */
@@ -33,37 +36,52 @@ function ArtTable() {
 
     /* Initializes table view to show all art pieces in the database */
     useEffect(() => {
-        axios.get("http://localhost:3001/admin/all").then((response) => {
+        axios.get("http://localhost:3001/admin/art/view/all").then((response) => {
             setArtToDisplay(response.data);
             let items = []
             for (var i = 0; i < response.data.length; i++) {
                 items.push(false);
             }
-            setShow(items);
+            setShowReview(items);
+            setShowDelete(items);
         });
     }, []);
 
     /* Modal Controls */
-    const [show, setShow] = useState([]);
+    const [showReview, setShowReview] = useState([]);
+    const [showDelete, setShowDelete] = useState([]);
 
     /* Close modal by setting show[index] to false */
-    const handleClose = (index) => {
-        let items = [...show];
+    const handleReviewClose = (index) => {
+        let items = [...showReview];
         items[index] = false;
-        setShow(items);
+        setShowReview(items);
     }
 
     /* Open modal by seting show[index] to true */
-    const handleShow = (index) => {
-        let items = [...show];
+    const handleReviewShow = (index) => {
+        let items = [...showReview];
         items[index] = true;
-        setShow(items);
+        setShowReview(items);
+    }
+
+    /* Confirm delete modal operations */
+    const handleDeleteClose = (index) => {
+        let items = [...showDelete];
+        items[index] = false;
+        setShowDelete(items);
+    }
+
+    const handleDeleteShow = (index) => {
+        let items = [...showDelete];
+        items[index] = true;
+        setShowDelete(items);
     }
 
     /* Updates database to change the status of specified art piece */ 
     const changeStatus = (newStatus, affectedArtId) => {
         
-        axios.put("http://localhost:3001/admin/changestatus", {status: newStatus, artId: affectedArtId});
+        axios.put("http://localhost:3001/admin/art/changestatus", {status: newStatus, artId: affectedArtId});
 
         /* Updates artToDisplay state with changed status */
         setArtToDisplay(artToDisplay.map((value, key) => {
@@ -85,13 +103,24 @@ function ArtTable() {
     /* Updates the view of the art table based on status */
     const switchView = (newView) => {
     
-        axios.get(`http://localhost:3001/admin/${newView}`).then((response) => {
+        axios.get(`http://localhost:3001/admin/art/view/${newView}`).then((response) => {
             setArtToDisplay(response.data);
             let items = []
             for (var i = 0; i < response.data.length; i++) {
                 items.push(false);
             }
-            setShow(items);
+            setShowReview(items);
+        })
+    }
+
+    const deleteArt = (affectedArtId, index) => {
+
+        handleDeleteClose(index);
+        handleReviewClose(index);
+        axios.delete(`http://localhost:3001/admin/art/remove/${affectedArtId}`).then(() => {
+            setArtToDisplay(artToDisplay.filter((value) => {
+                return value.art_id !== affectedArtId;
+            }));
         })
     }
     
@@ -145,16 +174,16 @@ function ArtTable() {
                                         <td>{value.email}</td>
                                         <td>{value.description.substring(0, 20) + "..."}</td>
                                         <td>{value.status}</td>
-                                        <td><Button variant="dark" onClick={() => handleShow(index)}>Review</Button></td>
+                                        <td><Button variant="dark" onClick={() => handleReviewShow(index)}>Review</Button></td>
                                     </tr>
 
                                     {/* Modal appears when 'Review' button has been clicked for specific row */}
-                                    <Modal centered size="lg" backdrop="static" show={show[index]} onHide={() => handleClose(index)}>
+                                    <Modal centered size="lg" backdrop="static" show={showReview[index]} onHide={() => handleReviewClose(index)}>
                                         <Modal.Header closeButton>
                                             <Modal.Title>Art Piece #{value.art_id}</Modal.Title>
                                         </Modal.Header>
                                         <Modal.Body>
-                                            <img className='img-fluid' src={value.art_url} alt=""/>
+                                            <img className='img-fluid' style={{width: "100%"}} src={value.art_url} alt=""/>
                                             <br /> <br />
                                             <div>
                                                 <p><strong>Title</strong>: {value.title}</p>
@@ -169,9 +198,27 @@ function ArtTable() {
                                             
                                         </Modal.Body>
                                         <Modal.Footer>
-                                            <Button variant="secondary" onClick={() => handleClose(index)}>Close</Button>
+                                            <FontAwesomeIcon style={{cursor: "pointer"}} className='col-md-1 offset-md-7 text-end' icon={faTrash} onClick={() => handleDeleteShow(index)} />
+                                            <Button variant="secondary" onClick={() => handleReviewClose(index)}>Close</Button>
                                             <Button variant="success" onClick={() => changeStatus(accepted, value.art_id)}>Accept</Button>
                                             <Button variant="danger" onClick={() => changeStatus(declined, value.art_id)}>Decline</Button>
+                                        </Modal.Footer>
+                                    </Modal>
+
+                                    {/* Confirm Deletion of Art Piece */}
+                                    <Modal centered backdrop="static" show={showDelete[index]} onHide={() => handleDeleteClose(index)} >
+                                        <Modal.Header closeButton>
+                                            <Modal.Title>Are you sure you want to delete this art piece?</Modal.Title>
+                                        </Modal.Header>
+                                        <Modal.Body>
+                                            <p><strong>Title:</strong> {value.title}</p>
+                                            <p><strong>First Name:</strong> {value.first_name}</p>
+                                            <p><strong>Last Name:</strong> {value.last_name}</p>
+                                            <p><strong>Username:</strong> {value.username}</p>
+                                        </Modal.Body>
+                                        <Modal.Footer>
+                                            <button className='btn btn-secondary' onClick={() => handleDeleteClose(index)}>Cancel</button>
+                                            <button className='btn btn-danger' onClick={() => deleteArt(value.art_id, index)}>Confirm Delete</button>
                                         </Modal.Footer>
                                     </Modal>
                                 </>

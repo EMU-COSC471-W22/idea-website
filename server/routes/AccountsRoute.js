@@ -55,7 +55,7 @@ router.get("/info", validateToken, async (req, res) => {
     } else {
         const username = req.user.username;
 
-        const user = await db.sequelize.query("SELECT * FROM accounts WHERE username = :enteredUsername", {
+        const user = await db.sequelize.query("SELECT username, first_name, last_name FROM accounts WHERE username = :enteredUsername", {
             replacements: {
                 enteredUsername: username
             },

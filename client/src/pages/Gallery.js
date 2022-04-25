@@ -12,6 +12,10 @@ import CardGroup from 'react-bootstrap/CardGroup';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
+{/* <FontAwesomeIcon icon={faCoffee} /> */}
+
 function Gallery() {
     const [artPieces, setArtPieces] = useState([]);
     const [currentArtId, setCurrentArtId] = useState(-1);
@@ -70,7 +74,6 @@ function Gallery() {
 
     }, []);
 
-
     const addComment = () => {
         if (newComment !== "") {
             axios.post("http://localhost:3001/comments", 
@@ -83,41 +86,46 @@ function Gallery() {
                     accessToken: localStorage.getItem("accessToken")
                 }
             }).then((response) => {
-                console.log(response.data.account_username);
+                console.log(response.data);
                 if (response.data.error) {
-                    setCommentError(response.data.error);
                     alert(response.data.error);
                 } else {
-                    console.log(response.data.account_username);
-                    setCommentError("");
+                    const commentToAdd = {comment_id: response.data[0].comment_id,comment_body: newComment, username: username, first_name: firstName, last_name: lastName};
+                    setComments([...comments, commentToAdd]);
+                    setNewComment("");
                 }
             });
-
-            if (commentError !== "") {
-                alert(commentError);
-            } else {
-                const commentToAdd = {comment_body: newComment, username: username, first_name: firstName, last_name: lastName};
-                setComments([...comments, commentToAdd]);
-                setNewComment("");
-            }  
         }
+    }
+
+    const deleteComment = (id) => {
+        axios.delete(`http://localhost:3001/comments/${id}`, 
+        {
+            headers: {
+                accessToken: localStorage.getItem("accessToken")
+            }
+        }).then(() => {
+            setComments(comments.filter((value) => {
+                return value.comment_id !== id;
+            }))
+        });
     }
 
     return (
         <div  >
-            <h1 style={{ textAlign: 'center' }}>Gallery</h1>
+            <h1 className='text-center m-5'>Gallery</h1>
             <div style={{ margin: 'auto', width: '80%', paddingTop: '3%' }}>
             <Row xs={1} sm={2} md={3} className="g-4">
                 {artPieces.map((value, index) => {
                     return (
                         <Col>
                             <Card style={{ display: 'inlineBlock' }} key={index} onClick={() => handleShow(index, value.art_id)}>
-                                <Image className='mt-4' fluid src={value.art_url} alt="art gallery piece"/>
-                                <Card.Body className='mt-3'>
+                                <Image className='m-2' fluid src={value.art_url} alt="art gallery piece"/>
+                                <Card.Body className='mt-2'>
                                     <Card.Title style={{fontSize: "2rem"}}><strong>{value.title}</strong></Card.Title>
                                     <Card.Text>
                                         <p>by {value.first_name} {value.last_name}</p>
-                                        <p> {value.description} </p>
+                                        <p> {value.description.substring(0, 100)} ...</p>
                                     </Card.Text>
                                 </Card.Body>
                             </Card>
@@ -126,12 +134,12 @@ function Gallery() {
                                 <Modal.Header closeButton></Modal.Header>
                                 <Modal.Body>
                                     <img width="100%" className="img-fluid border" src={value.art_url} alt="art gallery piece" />
-                                    <p className='mt-3'> {value.title} </p>
-                                    <p> {value.first_name} {value.last_name} </p>
+                                    <p className='mt-3'><strong>{value.title}</strong></p>
+                                    <p>by {value.first_name} {value.last_name} </p>
                                     <p> {value.description} </p>
                                     <hr />
                                     <div className='container'>
-                                        {!authState ? <p>Please <a href="/login">log in</a> or <a href="/registration">sign up</a> to post a comment</p> :
+                                        {!authState.status ? <p>Please <a href="/login">log in</a> or <a href="/registration">sign up</a> to post a comment</p> :
                                         <div className='row align-items-center'>
                                             <div className='col-sm-10'>
                                                 <textarea
@@ -155,7 +163,12 @@ function Gallery() {
                                         {comments.length > 0 && comments.map((comment, index) => {
                                             return (
                                                 <div key={index} className="bg-light border p-2">
-                                                    <p className='my-1'><strong>{comment.first_name} {comment.last_name}</strong> @<em>{comment.username}</em></p>
+                                                    <div className='row my-1' >
+                                                        <p className='col-md-4 mb-1'><strong>{comment.first_name} {comment.last_name}</strong> @<em>{comment.username}</em></p>
+                                                        {(comment.username === username || authState.isAdmin /*=== "admin"*/) && 
+                                                            <FontAwesomeIcon style={{cursor: "pointer"}} className='col-md-1 offset-md-7 text-end' icon={faTrash} onClick={() => deleteComment(comment.comment_id)} />
+                                                        }
+                                                    </div>
                                                     <p className='my-1'>{comment.comment_body}</p>
                                                 </div>
                                             );

@@ -13,6 +13,7 @@ function Login() {
     const [show, setShow] = useState(false);
     const [loginError, setLoginError] = useState("");
     const { setAuthState } = useContext(AuthContext);
+    // const [isAdmin, setIsAdmin] = useState(false);
 
     const login = (data) => {
         setShow(false);
@@ -20,13 +21,35 @@ function Login() {
             
             if (response.data.error) {
                 setLoginError(response.data.error);
+                setAuthState({status: true, username: "", isAdmin: false});
                 setShow(true);
             } else {
                 localStorage.setItem("accessToken", response.data);
-                setAuthState(true);
+                let username = response.data.username;
+                if (response.data.type === "admin") {
+                    setAuthState({status: true, username: username, isAdmin: true});
+                } else {
+                    setAuthState({status: true, username: username, isAdmin: false});
+                }
+                
                 navigate('/');
             }
         });
+
+        // axios.get("http://localhost:3001/admin/verification", 
+        // { 
+        //     headers: { 
+        //         accessToken: localStorage.getItem("accessToken") 
+        //     }
+        // }).then((response) => {
+        //     console.log(response.data);
+        //     if(response.data.error) {
+        //         setIsAdmin(false)
+        //     } 
+        //     if (response.data.authorized) {
+        //         setIsAdmin(true);
+        //     }
+        // });
     }
 
     const validationSchema = Yup.object().shape({

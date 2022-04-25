@@ -23,21 +23,25 @@ import './styles/About.css';
 import './styles/Home.css';
 
 function App() {
-  const [authState, setAuthState] = useState(false);
+  const [authState, setAuthState] = useState({status: false, username: "", isAdmin: false});
 
   useEffect(() => {
     axios.get("http://localhost:3001/auth/validation", { headers: {
       accessToken: localStorage.getItem("accessToken")
     } }).then((response) => {
-      
+      console.log(response.data);
       /* checks if there are errors from the middleware */
       if (response.data.error) {
-        setAuthState(false);
+        setAuthState({status: false, isAdmin: false});
       } else {
-        setAuthState(true);
+        if (response.data.type === "admin") {
+          setAuthState({status: true, username: response.data.username, isAdmin: true});
+        } else {
+          setAuthState({status: true, username: response.data.username, isAdmin: false});
+        }
       }
     });
-  }, []);
+  }, [authState.status]);
 
   return (
     <AuthContext.Provider value={{authState, setAuthState}} >
