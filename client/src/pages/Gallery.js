@@ -13,7 +13,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faTrash, faPalette } from '@fortawesome/free-solid-svg-icons';
 {/* <FontAwesomeIcon icon={faCoffee} /> */}
 
 function Gallery() {
@@ -115,11 +115,11 @@ function Gallery() {
         <div  >
             <h1 className='text-center m-5'>Gallery</h1>
             <div style={{ margin: 'auto', width: '80%', paddingTop: '3%' }}>
-            <Row xs={1} sm={2} md={3} className="g-4">
+            <Row xs={1} sm={1} md={2} lg={3} className="g-4">
                 {artPieces.map((value, index) => {
                     return (
                         <Col>
-                            <Card style={{ display: 'inlineBlock' }} key={index} onClick={() => handleShow(index, value.art_id)}>
+                            <Card style={{ display: "inlineBlock", cursor: "pointer" }} key={index} onClick={() => handleShow(index, value.art_id)}>
                                 <Image className='m-2' fluid src={value.art_url} alt="art gallery piece"/>
                                 <Card.Body className='mt-2'>
                                     <Card.Title style={{fontSize: "2rem"}}><strong>{value.title}</strong></Card.Title>
@@ -164,9 +164,12 @@ function Gallery() {
                                             return (
                                                 <div key={index} className="bg-light border p-2">
                                                     <div className='row my-1' >
-                                                        <p className='col-md-4 mb-1'><strong>{comment.first_name} {comment.last_name}</strong> @<em>{comment.username}</em></p>
+                                                        <p className='col-md-5 mb-1'>
+                                                            <strong>{comment.first_name} {comment.last_name}</strong> @<em>{comment.username} </em>
+                                                            {(comment.username === value.username) && <FontAwesomeIcon icon={faPalette} />}
+                                                        </p>
                                                         {(comment.username === username || authState.isAdmin /*=== "admin"*/) && 
-                                                            <FontAwesomeIcon style={{cursor: "pointer"}} className='col-md-1 offset-md-7 text-end' icon={faTrash} onClick={() => deleteComment(comment.comment_id)} />
+                                                            <FontAwesomeIcon style={{cursor: "pointer"}} className='col-md-1 offset-md-6 text-end' icon={faTrash} onClick={() => deleteComment(comment.comment_id)} />
                                                         }
                                                     </div>
                                                     <p className='my-1'>{comment.comment_body}</p>

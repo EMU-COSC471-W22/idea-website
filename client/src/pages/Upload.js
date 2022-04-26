@@ -53,6 +53,7 @@ function Upload() {
         title: Yup.string().min(2, 'Too Short!').max(50, "Too Long!").required("A title is required"),
         description: Yup.string().min(2, 'Too Short!').max(2200, "Max character limit: 2200 characters").required("A description is required"),
         email: Yup.string().email("Invalid email").required("An email is required"),
+        emailConfirmation: Yup.string().email("Invalid email").oneOf([Yup.ref('email'), null], "Email does not match!").required("Please confirm your email address"),
         file: Yup
             .mixed()
             .nullable()
@@ -71,6 +72,7 @@ function Upload() {
         title: "",
         description: "",
         email: "",
+        emailConfirmation: "",
         file: null
     }
 
@@ -103,6 +105,12 @@ function Upload() {
                                     <Field type="email" name="email" className="form-control" placeholder="Please enter an email for us to contact you about the status of your submission..." />
                                     {errors.email && touched.email && <div className='text-danger'>{errors.email}</div>}
                                     {!errors.email && touched.email && <div className='text-success'>Looks good!</div>}
+                                </div>
+                                <div className='mb-1'>
+                                    <label className='form-label'>Confirm Email:</label>
+                                    <Field type="email" name="emailConfirmation" className="form-control" placeholder="Please confirm your email..." />
+                                    {errors.emailConfirmation && touched.emailConfirmation && <div className='text-danger'>{errors.emailConfirmation}</div>}
+                                    {!errors.emailConfirmation && touched.emailConfirmation && <div className='text-success'>Looks good!</div>}
                                 </div>
                                 <div className='mb-1'> 
                                     <label className='form-label'>Upload Art:</label>
