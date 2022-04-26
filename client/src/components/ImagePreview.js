@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 
+/* This component is used for the request form after the user chooses an image */
 function ImagePreview(props) {
     const [preview, setPreview] = useState(null);
 
@@ -11,7 +12,7 @@ function ImagePreview(props) {
 
     return (
         <div>
-            {preview ? <img className='img-fluid' src={preview} alt="preview" /> : "loading..."}
+            {preview ? <img className='img-fluid' src={preview} alt="preview" /> : <p className='m-3' >loading...</p>}
         </div>
     )
 }

@@ -1,7 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { AuthContext } from '../helpers/AuthContext';
 import { useNavigate } from 'react-router';
-// import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
@@ -11,12 +10,13 @@ import ImagePreview from '../components/ImagePreview';
 function Upload() {
     const navigate = useNavigate();
     const { authState } = useContext(AuthContext);
-    const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/png"];
     const [username, setUsername] = useState("");
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
+    const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/png"];
 
     useEffect(() => {
+        /* If the user is logged, we access the username, first name, and last name to show at the end of the form */
         axios.get("http://localhost:3001/auth/info", {headers: {
             accessToken: localStorage.getItem("accessToken")
         }}).then((response) => {
@@ -36,9 +36,12 @@ function Upload() {
         formData.append("file", data.file);
         formData.append("upload_preset", "theideapreset");
 
+        /* First communicate with the Cloudinary API to store the image, and recieve the URL */
         axios.post("https://api.cloudinary.com/v1_1/theidea/image/upload", formData).then((response) => {
             console.log(response);
             let artURL = response.data.secure_url;
+
+            /* Next communicate with the database to insert new data to the artpieces table */
             axios.post("http://localhost:3001/upload", 
             { title: data.title, description: data.description, artURL: artURL, email: data.email},
             { headers: {accessToken: localStorage.getItem("accessToken")} }).then((response) => {
@@ -49,6 +52,7 @@ function Upload() {
         });
     }
 
+    /* Yup validation schema to ensure all information is correct before being able to submit */
     const validationSchema = Yup.object().shape({
         title: Yup.string().min(2, 'Too Short!').max(50, "Too Long!").required("A title is required"),
         description: Yup.string().min(2, 'Too Short!').max(2200, "Max character limit: 2200 characters").required("A description is required"),
@@ -78,6 +82,8 @@ function Upload() {
 
     return (
         <div className='outline container-sm my-5' style={{"maxWidth": "50rem"}}>
+        
+            {/* Request form will only show if the user is logged in. They are prompted to log in or sign up if they are not. */}
             {!authState.status ? <p>Please <a href="/login">log in</a> or <a href="/registration">sign up</a> to request an art piece for the gallery.</p> :
                 <>
                     <h2>Art Request Form</h2>
@@ -124,6 +130,8 @@ function Upload() {
                                     {errors.file && <div className='text-danger'>{errors.file}</div>}
                                     {!errors.file && touched.file && <div className='text-success'>Looks good!</div>}
                                 </div>
+
+                                {/* An image preview shows after the user has selected a file */}
                                 {values.file && 
                                     <div>
                                         <label className='form-label'>Image Preview:</label>

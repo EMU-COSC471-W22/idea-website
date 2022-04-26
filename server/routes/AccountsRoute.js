@@ -71,6 +71,7 @@ router.get("/info", validateToken, async (req, res) => {
 router.post("/login", async (req, res) => {
     const { username, password } = req.body;
     
+    /* Checking to see if the username exists in the database */
     const user = await db.sequelize.query("SELECT * FROM accounts WHERE username = :enteredUsername", {
         model: Accounts,
         mapToModel: true,
@@ -83,6 +84,7 @@ router.post("/login", async (req, res) => {
     if (user.length === 0) {
         res.send({error: "The username entered was not found in our records."});
     } else {
+        /* If username is in the database, check to see if the password is correct */
         bcrypt.compare(password, user[0].password).then((match) => {
             if (!match) {
                 res.send({error: "The password does not match the username."});
@@ -95,6 +97,7 @@ router.post("/login", async (req, res) => {
     }
 });
 
+/* Validation for the authState in the front end */
 router.get("/validation", validateToken, (req, res) => {
     res.send(req.user);
 });

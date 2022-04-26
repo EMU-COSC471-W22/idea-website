@@ -14,34 +14,36 @@ function AccountsTable() {
     const [newType, setNewType] = useState("");
     const [showDeleteAccount, setShowDeleteAccount] = useState([]);
 
-    /* Close modal by setting show[index] to false */
+    /* Modal open/close logic to prompt admin to confirm deletion of a selected account */
+    const showDeleteModal = (index) => {
+        let items = [...showDeleteAccount];
+        items[index] = true;    // sets specific modal for specific account to true so it displays
+        setShowDeleteAccount(items);
+    }
+
     const closeDeleteModal = (index) => {
         let items = [...showDeleteAccount];
-        items[index] = false;
+        items[index] = false; // sets specific modal for specific account to false so it closes
         setShowDeleteAccount(items);
+    }
+    
+    /* Modal open/close logic to prompt admin to change the account types */
+    const showTypeModal = (index) => {
+        let items = [...showChangeType];
+        items[index] = true; // sets specific modal for specific account to true so it displays
+        setShowChangeType(items);
     }
 
     const closeTypeModal = (index) => {
         let items = [...showChangeType];
-        items[index] = false;
+        items[index] = false; // sets specific modal for specific account to false so it closes
         setShowChangeType(items);
         setNewType("");
     }
 
-    /* Open modal by seting show[index] to true */
-    const showDeleteModal = (index) => {
-        let items = [...showDeleteAccount];
-        items[index] = true;
-        setShowDeleteAccount(items);
-    }
-
-    const showTypeModal = (index) => {
-        let items = [...showChangeType];
-        items[index] = true;
-        setShowChangeType(items);
-    }
-
     useEffect(() => {
+
+        /* On first render, access all of the accounts from the database */
         axios.get("http://localhost:3001/admin/accounts").then((response) => {
             setAccounts(response.data);
             let items = []
@@ -54,9 +56,11 @@ function AccountsTable() {
     }, []);
 
     const changeType = (affectedUsername, index) => {
+        /* Only changes the type for the account if the field is not blank */
         if (newType.replace(/\s+/g, "") !== "") {
             axios.put("http://localhost:3001/admin/account/changetype", {type: newType, username: affectedUsername});
 
+            /* Optimistic rendering to update the type in the front end */
             setAccounts(accounts.map((value, key) => {
                 return value.username === affectedUsername ?
                 {
@@ -73,9 +77,14 @@ function AccountsTable() {
     }
 
     const deleteAccount = (affectedUsername, index) => {
+        /* Closing the modal before deleting to avoid any errors for showing deleted information */
         closeDeleteModal(index);
         alert(affectedUsername + " will be deleted");
+
+        /* Contact the database to delete a user from the database */
         axios.delete(`http://localhost:3001/admin/account/remove/${affectedUsername}`).then(() => {
+            
+            /* Optimistic rendering to remove the deleted user */
             setAccounts(accounts.filter((value) => {
                 return value.username !== affectedUsername;
             }));
@@ -108,7 +117,7 @@ function AccountsTable() {
                                         <td><button className='btn btn-danger' onClick={() => showDeleteModal(index)} >Delete Account?</button></td>
                                     </tr>
 
-                                    {/* Change Type Modal */}
+                                    {/* Change Account Type Modal */}
                                     <Modal centered backdrop="static" show={showChangeType[index]} onHide={() => closeTypeModal(index)} >
                                         <Modal.Header closeButton>
                                             <Modal.Title>Edit Account Type of {value.username}?</Modal.Title>

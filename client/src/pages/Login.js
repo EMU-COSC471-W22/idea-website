@@ -35,23 +35,9 @@ function Login() {
                 navigate('/');
             }
         });
-
-        // axios.get("http://localhost:3001/admin/verification", 
-        // { 
-        //     headers: { 
-        //         accessToken: localStorage.getItem("accessToken") 
-        //     }
-        // }).then((response) => {
-        //     console.log(response.data);
-        //     if(response.data.error) {
-        //         setIsAdmin(false)
-        //     } 
-        //     if (response.data.authorized) {
-        //         setIsAdmin(true);
-        //     }
-        // });
     }
 
+    /* Yup validation schema to ensure all information is correct before being able to submit */
     const validationSchema = Yup.object().shape({
         username: Yup.string().required("Please enter your username"),
         password: Yup.string().required("Please enter your password")

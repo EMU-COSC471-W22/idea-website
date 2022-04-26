@@ -7,21 +7,18 @@ import Card from 'react-bootstrap/Card';
 import Modal from 'react-bootstrap/Modal';
 import Image from 'react-bootstrap/Image';
 import Stack from 'react-bootstrap/Stack';
-import Button from 'react-bootstrap/Button';
-import CardGroup from 'react-bootstrap/CardGroup';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
+/* Font Awesome Components */
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash, faPalette } from '@fortawesome/free-solid-svg-icons';
-{/* <FontAwesomeIcon icon={faCoffee} /> */}
 
 function Gallery() {
     const [artPieces, setArtPieces] = useState([]);
     const [currentArtId, setCurrentArtId] = useState(-1);
     const [comments, setComments] = useState([]);
     const [newComment, setNewComment] = useState("");
-    const [commentError, setCommentError] = useState("");
     const [username, setUsername] = useState("");
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
@@ -50,6 +47,8 @@ function Gallery() {
     }
   
     useEffect(() => {
+
+        /* On first render, this accesses all of the data from the artpieces table that have the 'accepted' status */
         axios.get("http://localhost:3001/gallery").then((response) => {
             setArtPieces(response.data);
             let items = []
@@ -59,13 +58,13 @@ function Gallery() {
             setShow(items);
         });
 
-        axios.get("http://localhost:3001/auth/info", {headers: {
-            accessToken: localStorage.getItem("accessToken")
-        }}).then((response) => {
+        /* This will grab the user info if they are logged in. This will determine if the user is logged in and can make comments. */
+        axios.get("http://localhost:3001/auth/info", { headers: { accessToken: localStorage.getItem("accessToken") }}).then((response) => {
             
             if (response.data.error) {
                 console.log(response.data.error);
             } else {
+                // Data used for comments
                 setUsername(response.data[0].username);
                 setFirstName(response.data[0].first_name);
                 setLastName(response.data[0].last_name);
@@ -86,11 +85,12 @@ function Gallery() {
                     accessToken: localStorage.getItem("accessToken")
                 }
             }).then((response) => {
-                console.log(response.data);
+                /* response should return the information about the new comment */
                 if (response.data.error) {
                     alert(response.data.error);
                 } else {
-                    const commentToAdd = {comment_id: response.data[0].comment_id,comment_body: newComment, username: username, first_name: firstName, last_name: lastName};
+                    /* Optimistic rendering of the new comment being added to the comment section */
+                    const commentToAdd = {comment_id: response.data[0].comment_id, comment_body: newComment, username: username, first_name: firstName, last_name: lastName};
                     setComments([...comments, commentToAdd]);
                     setNewComment("");
                 }
@@ -105,6 +105,7 @@ function Gallery() {
                 accessToken: localStorage.getItem("accessToken")
             }
         }).then(() => {
+            /* Optimistic rendering of the comment being deleted from the comment section */
             setComments(comments.filter((value) => {
                 return value.comment_id !== id;
             }))
@@ -119,6 +120,7 @@ function Gallery() {
                 {artPieces.map((value, index) => {
                     return (
                         <Col>
+                            {/* The card displayed in the gallery */}
                             <Card style={{ display: "inlineBlock", cursor: "pointer" }} key={index} onClick={() => handleShow(index, value.art_id)}>
                                 <Image className='m-2' fluid src={value.art_url} alt="art gallery piece"/>
                                 <Card.Body className='mt-2'>
@@ -130,6 +132,7 @@ function Gallery() {
                                 </Card.Body>
                             </Card>
 
+                            {/* Modal for each art piece after the user clicks on it */}
                             <Modal className='modal-dialog-scrollable"' centered size="lg" backdrop="static" show={show[index]} onHide={() => handleClose(index)} >
                                 <Modal.Header closeButton></Modal.Header>
                                 <Modal.Body>
@@ -138,6 +141,8 @@ function Gallery() {
                                     <p>by {value.first_name} {value.last_name} </p>
                                     <p> {value.description} </p>
                                     <hr />
+
+                                    {/* New comment input field */}
                                     <div className='container'>
                                         {!authState.status ? <p>Please <a href="/login">log in</a> or <a href="/registration">sign up</a> to post a comment</p> :
                                         <div className='row align-items-center'>
@@ -159,16 +164,22 @@ function Gallery() {
                                         }
                                     </div>
                                     <br />
+
+                                    {/* Comment section */}
                                     <Stack style={{overflowY: "auto", height: "20rem"}} gap={2} className='comments'>
                                         {comments.length > 0 && comments.map((comment, index) => {
                                             return (
                                                 <div key={index} className="bg-light border p-2">
                                                     <div className='row my-1' >
+                                                    
+                                                        {/* Displays first name, last name, username, and artist icon if the comment was made by the artist of the current art piece */}
                                                         <p className='col-md-5 mb-1'>
                                                             <strong>{comment.first_name} {comment.last_name}</strong> @<em>{comment.username} </em>
                                                             {(comment.username === value.username) && <FontAwesomeIcon icon={faPalette} />}
                                                         </p>
-                                                        {(comment.username === username || authState.isAdmin /*=== "admin"*/) && 
+                                                        
+                                                        {/* Option to delete comment made by the current logged in user or if they're an admin */}
+                                                        {(comment.username === username || authState.isAdmin) && 
                                                             <FontAwesomeIcon style={{cursor: "pointer"}} className='col-md-1 offset-md-6 text-end' icon={faTrash} onClick={() => deleteComment(comment.comment_id)} />
                                                         }
                                                     </div>

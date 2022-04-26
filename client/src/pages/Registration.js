@@ -46,7 +46,7 @@ function Registration() {
         
     }
 
-    /* Formik and Yup */
+    /* Yup validation schema to ensure all information is correct before being able to submit */
     const validationSchema = Yup.object().shape({
         firstName: Yup.string().min(2, 'Too Short!').max(50, "Too Long!").required("First name is required"),
         lastName: Yup.string().min(2, 'Too Short!').max(50, "Too Long!").required("Last name is required"),
