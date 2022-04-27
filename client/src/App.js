@@ -23,7 +23,13 @@ import './styles/About.css';
 import './styles/Home.css';
 
 function App() {
-  const [authState, setAuthState] = useState({status: false, username: "", isAdmin: false});
+  const [authState, setAuthState] = useState({
+    status: false, 
+    username: "", 
+    isAdmin: false, 
+    firstName: "", 
+    lastName: ""
+  });
 
   useEffect(() => {
     axios.get("http://localhost:3001/auth/validation", { headers: {
@@ -34,10 +40,25 @@ function App() {
       if (response.data.error) {
         setAuthState({status: false, isAdmin: false});
       } else {
+        let username = response.data.username;
+        let firstName = response.data.firstName;
+        let lastName = response.data.lastName;
         if (response.data.type === "admin") {
-          setAuthState({status: true, username: response.data.username, isAdmin: true});
+          setAuthState({
+            status: true, 
+            username: username, 
+            isAdmin: true,
+            firstName: firstName,
+            lastName: lastName  
+          });
         } else {
-          setAuthState({status: true, username: response.data.username, isAdmin: false});
+          setAuthState({
+            status: true, 
+            username: username, 
+            isAdmin: false,
+            firstName: firstName,
+            lastName: lastName 
+          });
         }
       }
     });

@@ -48,25 +48,6 @@ router.post("/users", async (req, res) => {
     res.send(user);
 });
 
-router.get("/info", validateToken, async (req, res) => {
-    
-    if (!req.user) {
-        res.send({error: "No info to check. User is not logged in"});
-    } else {
-        const username = req.user.username;
-
-        const user = await db.sequelize.query("SELECT username, first_name, last_name FROM accounts WHERE username = :enteredUsername", {
-            replacements: {
-                enteredUsername: username
-            },
-            model: Accounts,
-            mapToModel: true
-        });
-        res.send(user);
-    }
-    
-})
-
 /* Login */
 router.post("/login", async (req, res) => {
     const { username, password } = req.body;
@@ -90,7 +71,7 @@ router.post("/login", async (req, res) => {
                 res.send({error: "The password does not match the username."});
             } else {
                 /* Login was successful */
-                const accessToken = sign({username: user[0].username, type: user[0].type}, "PguaV3eQcaK3MBc");
+                const accessToken = sign({username: user[0].username, type: user[0].type, firstName: user[0].first_name, lastName: user[0].last_name}, "PguaV3eQcaK3MBc");
                 res.send(accessToken);
             }
         });

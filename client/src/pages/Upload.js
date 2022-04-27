@@ -10,26 +10,7 @@ import ImagePreview from '../components/ImagePreview';
 function Upload() {
     const navigate = useNavigate();
     const { authState } = useContext(AuthContext);
-    const [username, setUsername] = useState("");
-    const [firstName, setFirstName] = useState("");
-    const [lastName, setLastName] = useState("");
     const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/png"];
-
-    useEffect(() => {
-        /* If the user is logged, we access the username, first name, and last name to show at the end of the form */
-        axios.get("http://localhost:3001/auth/info", {headers: {
-            accessToken: localStorage.getItem("accessToken")
-        }}).then((response) => {
-            
-            if (response.data.error) {
-                console.log(response.data.error);
-            } else {
-                setUsername(response.data[0].username);
-                setFirstName(response.data[0].first_name);
-                setLastName(response.data[0].last_name);
-            }
-        });
-    }, []);
     
     const requestArt = (data) => {
         const formData = new FormData();
@@ -139,7 +120,7 @@ function Upload() {
                                     </div> 
                                 }
                                 <div>
-                                    <label className='form-label'>Submitting form as {firstName} {lastName} ({username})</label>
+                                    <label className='form-label'>Submitting form as {authState.firstName} {authState.lastName} ({authState.username})</label>
                                 </div>
                                 <button type="submit" className="btn btn-primary my-3">Request Art</button>
                             </Form>

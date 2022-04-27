@@ -12,17 +12,13 @@ import Col from 'react-bootstrap/Col';
 
 /* Font Awesome Components */
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrash, faPalette } from '@fortawesome/free-solid-svg-icons';
+import { faTrash, faPalette, faUserTie } from '@fortawesome/free-solid-svg-icons';
 
 function Gallery() {
     const [artPieces, setArtPieces] = useState([]);
     const [currentArtId, setCurrentArtId] = useState(-1);
     const [comments, setComments] = useState([]);
     const [newComment, setNewComment] = useState("");
-    const [username, setUsername] = useState("");
-    const [firstName, setFirstName] = useState("");
-    const [lastName, setLastName] = useState("");
-
     const { authState } = useContext(AuthContext);
 
     /* Modal Controls */
@@ -58,19 +54,6 @@ function Gallery() {
             setShow(items);
         });
 
-        /* This will grab the user info if they are logged in. This will determine if the user is logged in and can make comments. */
-        axios.get("http://localhost:3001/auth/info", { headers: { accessToken: localStorage.getItem("accessToken") }}).then((response) => {
-            
-            if (response.data.error) {
-                console.log(response.data.error);
-            } else {
-                // Data used for comments
-                setUsername(response.data[0].username);
-                setFirstName(response.data[0].first_name);
-                setLastName(response.data[0].last_name);
-            }
-        });
-
     }, []);
 
     const addComment = () => {
@@ -90,7 +73,13 @@ function Gallery() {
                     alert(response.data.error);
                 } else {
                     /* Optimistic rendering of the new comment being added to the comment section */
-                    const commentToAdd = {comment_id: response.data[0].comment_id, comment_body: newComment, username: username, first_name: firstName, last_name: lastName};
+                    const commentToAdd = {
+                        comment_id: response.data[0].comment_id, 
+                        comment_body: newComment, 
+                        username: authState.username, 
+                        first_name: authState.firstName, 
+                        last_name: authState.lastName
+                    };
                     setComments([...comments, commentToAdd]);
                     setNewComment("");
                 }
@@ -151,7 +140,7 @@ function Gallery() {
                                                     value={newComment} 
                                                     style={{ resize: "vertical",  overflow: "auto"}}
                                                     className="form-control" 
-                                                    placeholder={"Comment as " + username + "..."} 
+                                                    placeholder={"Comment as " + authState.username + "..."} 
                                                     onChange={(event) => {
                                                         setNewComment(event.target.value)
                                                     }}
@@ -173,14 +162,17 @@ function Gallery() {
                                                     <div className='row my-1' >
                                                     
                                                         {/* Displays first name, last name, username, and artist icon if the comment was made by the artist of the current art piece */}
-                                                        <p className='col-md-5 mb-1'>
-                                                            <strong>{comment.first_name} {comment.last_name}</strong> @<em>{comment.username} </em>
-                                                            {(comment.username === value.username) && <FontAwesomeIcon icon={faPalette} />}
-                                                        </p>
+                                                        <div className='col-md-5 col-sm-10'>
+                                                            <p className='mb-1' >
+                                                                <strong>{comment.first_name} {comment.last_name}</strong> @<em>{comment.username} </em>
+                                                                {(comment.type === "admin") &&  <span><FontAwesomeIcon icon={faUserTie}/> </span>  }
+                                                                {(comment.username === value.username) && <span><FontAwesomeIcon icon={faPalette} /></span> }
+                                                            </p>
+                                                        </div>
                                                         
                                                         {/* Option to delete comment made by the current logged in user or if they're an admin */}
-                                                        {(comment.username === username || authState.isAdmin) && 
-                                                            <FontAwesomeIcon style={{cursor: "pointer"}} className='col-md-1 offset-md-6 text-end' icon={faTrash} onClick={() => deleteComment(comment.comment_id)} />
+                                                        {(comment.username === authState.username || authState.isAdmin) && 
+                                                            <FontAwesomeIcon style={{cursor: "pointer"}} className='col-md-1 offset-md-6 col-sm-2 text-end' icon={faTrash} onClick={() => deleteComment(comment.comment_id)} />
                                                         }
                                                     </div>
                                                     <p className='my-1'>{comment.comment_body}</p>

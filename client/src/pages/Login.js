@@ -13,7 +13,6 @@ function Login() {
     const [show, setShow] = useState(false);
     const [loginError, setLoginError] = useState("");
     const { setAuthState } = useContext(AuthContext);
-    // const [isAdmin, setIsAdmin] = useState(false);
 
     const login = (data) => {
         setShow(false);
@@ -21,15 +20,35 @@ function Login() {
             
             if (response.data.error) {
                 setLoginError(response.data.error);
-                setAuthState({status: true, username: "", isAdmin: false});
+                setAuthState({
+                    status: true, 
+                    username: "", 
+                    isAdmin: false,
+                    firstName: "",
+                    lastName: ""
+                });
                 setShow(true);
             } else {
                 localStorage.setItem("accessToken", response.data);
                 let username = response.data.username;
+                let firstName = response.data.firstName;
+                let lastName = response.data.lastName;
                 if (response.data.type === "admin") {
-                    setAuthState({status: true, username: username, isAdmin: true});
+                    setAuthState({
+                        status: true, 
+                        username: username, 
+                        isAdmin: true,
+                        firstName: firstName,
+                        lastName: lastName
+                    });
                 } else {
-                    setAuthState({status: true, username: username, isAdmin: false});
+                    setAuthState({
+                        status: true, 
+                        username: username, 
+                        isAdmin: false,
+                        firstName: firstName,
+                        lastName: lastName
+                    });
                 }
                 
                 navigate('/');

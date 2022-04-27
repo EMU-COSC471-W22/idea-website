@@ -4,13 +4,6 @@ import axios from 'axios';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 
-// import Form from 'react-bootstrap/Form';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import Container from 'react-bootstrap/Container';
-import Button from 'react-bootstrap/Button';
-import Stack from 'react-bootstrap/Stack';
-
 function Registration() {
 
     const navigate = useNavigate();

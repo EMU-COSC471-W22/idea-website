@@ -64,6 +64,7 @@ router.put("/art/changestatus", async (req, res) => {
     }); 
 });
 
+/* Access all accounts for the account table in the front end */
 router.get("/accounts", async (req, res) => {
     const allAccounts = await db.sequelize.query("SELECT username, first_name, last_name, type FROM accounts ORDER BY type, username", {
         model: Accounts,
@@ -72,6 +73,7 @@ router.get("/accounts", async (req, res) => {
     res.send(allAccounts);
 });
 
+/* Route to change the account type of a selected account */
 router.put("/account/changetype", async (req, res) => {
     const newType = req.body.type;
     const affectedUsername = req.body.username;
@@ -90,6 +92,7 @@ router.put("/account/changetype", async (req, res) => {
     });
 })
 
+/* Route to delete an art piece based on the selected art_id */
 router.delete("/art/remove/:artId", async (req, res) => {
     const artToDelete = req.params.artId;
 
@@ -108,6 +111,7 @@ router.delete("/art/remove/:artId", async (req, res) => {
     res.send("Art piece was deleted");
 });
 
+/* Route to delete account based on the selected username */
 router.delete("/account/remove/:username", async (req, res) => {
     const accountToDelete = req.params.username;
 

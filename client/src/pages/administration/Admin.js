@@ -12,25 +12,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLock } from '@fortawesome/free-solid-svg-icons';
 
 function Admin() {
-    const [isAdmin, setIsAdmin] = useState(false);
     const { authState } = useContext(AuthContext);
-    
-    useEffect(() => {
-        axios.get("http://localhost:3001/admin/verification", 
-        { 
-            headers: { 
-                accessToken: localStorage.getItem("accessToken") 
-            }
-        }).then((response) => {
-            console.log(response.data);
-            if(response.data.error) {
-                setIsAdmin(false)
-            } 
-            if (response.data.authorized) {
-                setIsAdmin(true);
-            }
-        });
-    }, []);
 
     return(
         <div>
