@@ -1,13 +1,13 @@
 module.exports = (sequelize, DataTypes) => {
 
     const ArtPieces = sequelize.define("ArtPieces", {
-        artId: {
+        art_id: {
             type: DataTypes.INTEGER,
             autoIncrement: true,
             primaryKey: true,
             allowNull: false
         },
-        artURL: {
+        art_url: {
             type: DataTypes.STRING(1000),
             allowNull: false
         },
@@ -15,13 +15,13 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false
         },
-        artistName: {
+        description: {
+            type: DataTypes.STRING(2200),
+            allowNull:false
+        },
+        email: {
             type: DataTypes.STRING,
             allowNull: false
-        },
-        description: {
-            type: DataTypes.STRING(280),
-            allowNull:false
         },
         status: {
             type: DataTypes.STRING,
@@ -33,9 +33,10 @@ module.exports = (sequelize, DataTypes) => {
     });
 
     ArtPieces.associate = (models) => {
+        /* Gives the comments table the foreign key art_id */
         ArtPieces.hasMany(models.Comments, {
             onDelete: "CASCADE",
-            foreignKey: "artId"
+            foreignKey: "art_id"
         });
     }
 

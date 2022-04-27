@@ -1,19 +1,25 @@
-import React from 'react';
-
+import React, { useEffect, useState, useContext } from 'react';
+import { AuthContext } from '../helpers/AuthContext';
 import axios from 'axios';
-import { useEffect, useState } from 'react';
 
+/* React Bootstrap Components */
 import Card from 'react-bootstrap/Card';
 import Modal from 'react-bootstrap/Modal';
 import Image from 'react-bootstrap/Image';
 import Stack from 'react-bootstrap/Stack';
-import Button from 'react-bootstrap/Button';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+
+/* Font Awesome Components */
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrash, faPalette, faUserTie } from '@fortawesome/free-solid-svg-icons';
 
 function Gallery() {
     const [artPieces, setArtPieces] = useState([]);
-    const [currentArtId, setCurrentArtId] = useState(0);
+    const [currentArtId, setCurrentArtId] = useState(-1);
     const [comments, setComments] = useState([]);
     const [newComment, setNewComment] = useState("");
+    const { authState } = useContext(AuthContext);
 
     /* Modal Controls */
     const [show, setShow] = useState([]);
@@ -31,9 +37,14 @@ function Gallery() {
         items[index] = true;
         setShow(items);
         setCurrentArtId(artId);
+        axios.get(`http://localhost:3001/comments/${artId}`).then((response) => {
+            setComments(response.data);
+        });
     }
   
     useEffect(() => {
+
+        /* On first render, this accesses all of the data from the artpieces table that have the 'accepted' status */
         axios.get("http://localhost:3001/gallery").then((response) => {
             setArtPieces(response.data);
             let items = []
@@ -42,74 +53,138 @@ function Gallery() {
             }
             setShow(items);
         });
+
     }, []);
 
-    useEffect(() => {
-        axios.get(`http://localhost:3001/comments/${currentArtId}`).then((response) => {
-            setComments(response.data);
-        })
-    }, [currentArtId])
-
     const addComment = () => {
-        axios.post("http://localhost:3001/comments", {commentBody: newComment, artId: currentArtId}).then((response) => {
-            
+        if (newComment !== "") {
+            axios.post("http://localhost:3001/comments", 
+            {
+                commentBody: newComment, 
+                artId: currentArtId
+            }, 
+            {
+                headers: {
+                    accessToken: localStorage.getItem("accessToken")
+                }
+            }).then((response) => {
+                /* response should return the information about the new comment */
+                if (response.data.error) {
+                    alert(response.data.error);
+                } else {
+                    /* Optimistic rendering of the new comment being added to the comment section */
+                    const commentToAdd = {
+                        comment_id: response.data[0].comment_id, 
+                        comment_body: newComment, 
+                        username: authState.username, 
+                        first_name: authState.firstName, 
+                        last_name: authState.lastName
+                    };
+                    setComments([...comments, commentToAdd]);
+                    setNewComment("");
+                }
+            });
+        }
+    }
+
+    const deleteComment = (id) => {
+        axios.delete(`http://localhost:3001/comments/${id}`, 
+        {
+            headers: {
+                accessToken: localStorage.getItem("accessToken")
+            }
+        }).then(() => {
+            /* Optimistic rendering of the comment being deleted from the comment section */
+            setComments(comments.filter((value) => {
+                return value.comment_id !== id;
+            }))
         });
-        const commentToAdd = {commentBody: newComment};
-        setComments([...comments, commentToAdd]);
-        setNewComment("");
     }
 
     return (
         <div  >
-            <h1 style={{ textAlign: 'center' }}>Gallery</h1>
+            <h1 className='text-center m-5'>Gallery</h1>
             <div style={{ margin: 'auto', width: '80%', paddingTop: '3%' }}>
-            {artPieces.map((value, index) => {
-                return (
-                    <div>
-                        <Card style={{ width: '25rem' }} key={index} onClick={() => handleShow(index, value.artId)}>
-                            <Card.Img src={value.artURL}/>
-                            <Card.Body>
-                                <Card.Title> {value.title} </Card.Title>
-                                <Card.Text>
-                                    <h3> {value.artistName} </h3>
-                                    <p> {value.description} </p>
-                                </Card.Text>
-                            </Card.Body>
-                        </Card>
+            <Row xs={1} sm={1} md={2} lg={3} className="g-4">
+                {artPieces.map((value, index) => {
+                    return (
+                        <Col>
+                            {/* The card displayed in the gallery */}
+                            <Card style={{ display: "inlineBlock", cursor: "pointer" }} key={index} onClick={() => handleShow(index, value.art_id)}>
+                                <Image className='m-2' fluid src={value.art_url} alt="art gallery piece"/>
+                                <Card.Body className='mt-2'>
+                                    <Card.Title style={{fontSize: "2rem"}}><strong>{value.title}</strong></Card.Title>
+                                    <Card.Text>
+                                        <p>by {value.first_name} {value.last_name}</p>
+                                        <p> {value.description.substring(0, 100)} ...</p>
+                                    </Card.Text>
+                                </Card.Body>
+                            </Card>
 
-                        <Modal centered size="lg" backdrop="static" show={show[index]} onHide={() => handleClose(index)} >
-                            <Modal.Header closeButton></Modal.Header>
-                            <Modal.Body>
-                                <Image src={value.artURL} fluid/>
-                                <h1> {value.title} </h1>
-                                <p> {value.artistName} </p>
-                                <p> {value.description} </p>
-                                <Stack direction='horizontal' gap={2} >
-                                    <input 
-                                        type="text" 
-                                        value={newComment} 
-                                        className="me-auto" 
-                                        placeholder="Add your comment here..." 
-                                        onChange={(event) => {
-                                            setNewComment(event.target.value)
-                                        }}
-                                    />
-                                    <Button onClick={addComment}>Send</Button>
-                                </Stack>
-                                <br />
-                                <Stack gap={2} className='comments'>
-                                    {comments.length > 0 && comments.map((comment, index) => {
-                                        return (
-                                            <div key={index} className="bg-light border">{comment.commentBody}</div>
-                                        );
-                                    })}
-                                </Stack>
-                            </Modal.Body>
-                        </Modal>
-                    </div>
-                    
-                )
-            })}
+                            {/* Modal for each art piece after the user clicks on it */}
+                            <Modal className='modal-dialog-scrollable"' centered size="lg" backdrop="static" show={show[index]} onHide={() => handleClose(index)} >
+                                <Modal.Header closeButton></Modal.Header>
+                                <Modal.Body>
+                                    <img width="100%" className="img-fluid border" src={value.art_url} alt="art gallery piece" />
+                                    <p className='mt-3'><strong>{value.title}</strong></p>
+                                    <p>by {value.first_name} {value.last_name} </p>
+                                    <p> {value.description} </p>
+                                    <hr />
+
+                                    {/* New comment input field */}
+                                    <div className='container'>
+                                        {!authState.status ? <p>Please <a href="/login">log in</a> or <a href="/registration">sign up</a> to post a comment</p> :
+                                        <div className='row align-items-center'>
+                                            <div className='col-sm-10'>
+                                                <textarea
+                                                    value={newComment} 
+                                                    style={{ resize: "vertical",  overflow: "auto"}}
+                                                    className="form-control" 
+                                                    placeholder={"Comment as " + authState.username + "..."} 
+                                                    onChange={(event) => {
+                                                        setNewComment(event.target.value)
+                                                    }}
+                                                />
+                                            </div>
+                                            <div className='ps-1 col-sm-2'>
+                                                <button className='btn btn-primary' onClick={addComment}>Send</button>
+                                            </div>
+                                        </div>
+                                        }
+                                    </div>
+                                    <br />
+
+                                    {/* Comment section */}
+                                    <Stack style={{overflowY: "auto", height: "20rem"}} gap={2} className='comments'>
+                                        {comments.length > 0 && comments.map((comment, index) => {
+                                            return (
+                                                <div key={index} className="bg-light border p-2">
+                                                    <div className='row my-1' >
+                                                    
+                                                        {/* Displays first name, last name, username, and artist icon if the comment was made by the artist of the current art piece */}
+                                                        <div className='col-md-5 col-sm-10'>
+                                                            <p className='mb-1' >
+                                                                <strong>{comment.first_name} {comment.last_name}</strong> @<em>{comment.username} </em>
+                                                                {(comment.type === "admin") &&  <span><FontAwesomeIcon icon={faUserTie}/> </span>  }
+                                                                {(comment.username === value.username) && <span><FontAwesomeIcon icon={faPalette} /></span> }
+                                                            </p>
+                                                        </div>
+                                                        
+                                                        {/* Option to delete comment made by the current logged in user or if they're an admin */}
+                                                        {(comment.username === authState.username || authState.isAdmin) && 
+                                                            <FontAwesomeIcon style={{cursor: "pointer"}} className='col-md-1 offset-md-6 col-sm-2 text-end' icon={faTrash} onClick={() => deleteComment(comment.comment_id)} />
+                                                        }
+                                                    </div>
+                                                    <p className='my-1'>{comment.comment_body}</p>
+                                                </div>
+                                            );
+                                        })}
+                                    </Stack>
+                                </Modal.Body>
+                            </Modal>
+                        </Col>
+                )})}
+            </Row>
             </div>
         </div>
         
