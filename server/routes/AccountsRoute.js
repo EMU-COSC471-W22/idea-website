@@ -3,7 +3,7 @@ const router = express.Router();
 const { Accounts } = require("../models"); // importing necessary tables for route
 const { QueryTypes } = require("sequelize");
 const db = require('../models'); // allows for use of sequelize.query functions
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const { sign } = require("jsonwebtoken");
 const { validateToken } = require("../middlewares/AuthMiddleware");
 
