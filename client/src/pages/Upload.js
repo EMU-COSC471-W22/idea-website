@@ -22,6 +22,18 @@ function Upload() {
             console.log(response);
             let artURL = response.data.secure_url;
 
+            axios.post("https://formsubmit.co/ajax/ideawebsite2022@gmail.com", {
+                _subject: "New Art Request From " + authState.username + "!",
+                _template: "table",    
+                first_name: authState.firstName,
+                last_name: authState.lastName,
+                username: authState.username,    
+                title: data.title,
+                url: artURL,
+                description: data.description,
+                email: data.email
+            });
+
             /* Next communicate with the database to insert new data to the artpieces table */
             axios.post("http://localhost:3001/upload", 
             { title: data.title, description: data.description, artURL: artURL, email: data.email},
