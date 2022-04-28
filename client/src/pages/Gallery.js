@@ -125,7 +125,7 @@ function Gallery() {
                             <Modal className='modal-dialog-scrollable"' centered size="lg" backdrop="static" show={show[index]} onHide={() => handleClose(index)} >
                                 <Modal.Header closeButton></Modal.Header>
                                 <Modal.Body>
-                                    <img width="100%" className="img-fluid border" src={value.art_url} alt="art gallery piece" />
+                                    <a href={value.art_url} rel="noreferrer" target="_blank"> <img width="100%" className="img-fluid border" src={value.art_url} alt="art gallery piece" /></a>
                                     <p className='mt-3'><strong>{value.title}</strong></p>
                                     <p>by {value.first_name} {value.last_name} </p>
                                     <p> {value.description} </p>

@@ -90,12 +90,13 @@ function Registration() {
                             {errors.password && touched.password && <div className='text-danger'>{errors.password}</div>}
                             {!errors.password && touched.password && <div className='text-success'>Password is valid!</div>}
                         </div>
-                        <div className='mb-1'>
+                        <div className='mb-4'>
                             <label className='form-label'>Confirm password</label>
                             <Field name="passwordConfirmation" type="password" className="form-control"/>
                             {errors.passwordConfirmation && touched.passwordConfirmation && <div className='text-danger'>{errors.passwordConfirmation}</div>}
                             {!errors.passwordConfirmation && touched.passwordConfirmation && <div className='text-success'>Password matches!</div>}
                         </div>
+                        <p>Already have an account? <a href="/login">Log in</a></p>
                         <button type="submit" className="btn btn-primary my-3">Register</button>
                     </Form>
                 )}

@@ -1,11 +1,38 @@
 .home-section {
     padding: 50px;
     text-align: left;
-    background-color: #474e5d;
+    background-image: url("../images/homepage-background-clouds.png");
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100%;
     color: white;
+}
+
+.home-section h2 {
+    font-weight: bold;
+    padding-bottom: 2rem;
 }
 
 .home-container {
     width: 100%;
+}
 
+.home-info {
+    background-color: #474e5db2;
+}
+
+.home-info a {
+    text-decoration: none;
+    color: white;
+}
+
+.home-header {
+    text-shadow: 2px 2px 2px #474e5d;
+    font-weight: bold;
+}
+
+.home-logo {
+    box-shadow: 2px 2px 2px #474e5d;
 }
