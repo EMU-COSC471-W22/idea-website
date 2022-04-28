@@ -83,11 +83,12 @@ function Login() {
                             <Field name="username" className="form-control" />
                             {errors.username && touched.username && <div className='text-danger'>{errors.username}</div>}
                         </div>
-                        <div className='mb-1'>
+                        <div className='mb-4'>
                             <label className='form-label'>Password</label>
                             <Field name="password" className="form-control" type="password"/>
                             {errors.password && touched.password && <div className='text-danger'>{errors.password}</div>}
                         </div>
+                        <p>Need an account? <a href="/registration">Sign up</a></p>
                         <button type="submit" className="btn btn-primary my-3">Log In</button>
                     </Form>
                 )}

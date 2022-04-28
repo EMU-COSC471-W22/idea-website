@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import { AuthContext } from '../helpers/AuthContext';
 import { Outlet, Link } from 'react-router-dom';
+import Logo from '../images/theidealogo_icon_only.png';
 
 /* React Bootstrap Components */
 import Navbar from 'react-bootstrap/Navbar';
@@ -18,10 +19,10 @@ function NavigationBar() {
 
     return (
         <div>
-            <Navbar collapseOnSelect className='navbar' bg='light' variant='light' expand='lg'>
-                <Navbar.Brand> <Link className='logo' to='/'>THE IDEA</Link> </Navbar.Brand>
+            <Navbar collapseOnSelect className='navbar' bg='light' variant='light' expand='md' sticky="top">
+                <Navbar.Brand><Link className='logo' to='/'><img className='img-fluid' src={Logo} alt="The IDEA logo" />THE IDEA</Link> </Navbar.Brand>
                 <Navbar.Toggle className='navbar-toggle-padding' aria-controls='responsive-navbar-nav'/>
-                <Container className='nav-items' expand='lg'>
+                <Container className='nav-items'>
                     <Navbar.Collapse className='justify-content-end' id='responsive-navbar-nav'>
                         <Nav>
                             <Link className='nav-item' to='/gallery'>Gallery</Link>
