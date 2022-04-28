@@ -105,6 +105,7 @@ function Gallery() {
         <div  >
             <h1 className='text-center m-5'>Gallery</h1>
             <div style={{ margin: 'auto', width: '80%', paddingTop: '3%' }}>
+            {(artPieces.length === 0) ? <h1 className='text-center m-5'>There are currently no art pieces in the gallery...</h1> :
             <Row xs={1} sm={1} md={2} lg={3} className="g-4">
                 {artPieces.map((value, index) => {
                     return (
@@ -184,7 +185,7 @@ function Gallery() {
                             </Modal>
                         </Col>
                 )})}
-            </Row>
+            </Row>}
             </div>
         </div>
         
