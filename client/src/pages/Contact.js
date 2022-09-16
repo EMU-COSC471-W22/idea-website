@@ -14,7 +14,7 @@ function Contact() {
                     <img className='margin-right img-fluid' src={ Logo } alt="the IDEA logo"/>
                 </div>
                 <div class="column">
-                    <form action="https://formsubmit.co/ideawebsite2022@gmail.com" method='POST'>
+                    <form action={process.env.REACT_APP_FORM_SUBMIT_API_URL} method='POST'>
                         <label className='form-label'>First Name</label>
                         <input type="text" className="form-control" name="firstname" placeholder="Your name..." required></input>
                         <label className='form-label'>Last Name</label>
@@ -23,6 +23,8 @@ function Contact() {
                         <input type="email" className="form-control" name="email" placeholder="Your email..." required></input>
                         <label className='form-label'>Subject</label>
                         <textarea className="form-control" style={{ resize: "vertical",  overflow: "auto"}} name="subject" placeholder="Write something..." required></textarea>
+                        <input type="hidden" name='_template' value="table" />
+                        <input type="hidden" name='_subject' value="Contact Form Submission" />
                         <input type="submit" value="Submit"></input>
                     </form>
                 </div>

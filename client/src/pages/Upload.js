@@ -18,12 +18,24 @@ function Upload() {
         formData.append("upload_preset", "theideapreset");
 
         /* First communicate with the Cloudinary API to store the image, and recieve the URL */
-        axios.post("https://api.cloudinary.com/v1_1/theidea/image/upload", formData).then((response) => {
+        axios.post(`${process.env.REACT_APP_CLOUDINARY_API_URL}`, formData).then((response) => {
             console.log(response);
             let artURL = response.data.secure_url;
 
+            axios.post(`${process.env.REACT_APP_FORM_SUBMIT_API_URL}`, {
+                _subject: "New Art Request From " + authState.username + "!",
+                _template: "table",    
+                first_name: authState.firstName,
+                last_name: authState.lastName,
+                username: authState.username,    
+                title: data.title,
+                url: artURL,
+                description: data.description,
+                email: data.email
+            });
+
             /* Next communicate with the database to insert new data to the artpieces table */
-            axios.post("http://localhost:3001/upload", 
+            axios.post(`${process.env.REACT_APP_BACKEND_API_URL}/upload`, 
             { title: data.title, description: data.description, artURL: artURL, email: data.email},
             { headers: {accessToken: localStorage.getItem("accessToken")} }).then((response) => {
                 console.log(response.data);

@@ -1,7 +1,7 @@
 {
   "development": {
     "username": "root",
-    "password": "7#e-$e(0n|)_^^@N9()",
+    "password": "",
     "database": "theideadb",
     "host": "localhost",
     "dialect": "mysql"
@@ -14,10 +14,10 @@
     "dialect": "mysql"
   },
   "production": {
-    "username": "root",
+    "username": "",
     "password": null,
-    "database": "database_production",
-    "host": "127.0.0.1",
-    "dialect": "mysql"
+    "database": "",
+    "host": "",
+    "dialect": ""
   }
 }

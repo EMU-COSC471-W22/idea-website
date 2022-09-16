@@ -11,7 +11,7 @@ function Registration() {
 
     const registerUser = (data) => {
         /* A successful registration will take you to the home page */
-        axios.post("http://localhost:3001/auth", data).then(() => {
+        axios.post(`${process.env.REACT_APP_BACKEND_API_URL}/auth`, data).then(() => {
             console.log(data);
         });
         navigate('/login');
@@ -20,7 +20,7 @@ function Registration() {
     const validateUsername = (value) => {
 
         /* Checks to see if username is taken */
-        axios.post("http://localhost:3001/auth/users", {username: value}).then((response) => {
+        axios.post(`${process.env.REACT_APP_BACKEND_API_URL}/auth/users`, {username: value}).then((response) => {
             
             /* If the username does not exist in the table, it will return and empty array */
             if (response.data.length !== 0) {

@@ -32,7 +32,7 @@ function App() {
   });
 
   useEffect(() => {
-    axios.get("http://localhost:3001/auth/validation", { headers: {
+    axios.get(`${process.env.REACT_APP_BACKEND_API_URL}/auth/validation`, { headers: {
       accessToken: localStorage.getItem("accessToken")
     } }).then((response) => {
       console.log(response.data);

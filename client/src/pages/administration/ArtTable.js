@@ -36,7 +36,7 @@ function ArtTable() {
 
     /* Initializes table view to show all art pieces in the database */
     useEffect(() => {
-        axios.get("http://localhost:3001/admin/art/view/all").then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_API_URL}/admin/art/view/all`).then((response) => {
             setArtToDisplay(response.data);
             let items = []
             for (var i = 0; i < response.data.length; i++) {
@@ -81,7 +81,7 @@ function ArtTable() {
     /* Updates database to change the status of specified art piece */ 
     const changeStatus = (newStatus, affectedArtId) => {
         
-        axios.put("http://localhost:3001/admin/art/changestatus", {status: newStatus, artId: affectedArtId});
+        axios.put(`${process.env.REACT_APP_BACKEND_API_URL}/admin/art/changestatus`, {status: newStatus, artId: affectedArtId});
 
         /* Updates artToDisplay state with changed status */
         setArtToDisplay(artToDisplay.map((value, key) => {
@@ -103,7 +103,7 @@ function ArtTable() {
     /* Updates the view of the art table based on status */
     const switchView = (newView) => {
     
-        axios.get(`http://localhost:3001/admin/art/view/${newView}`).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_API_URL}/admin/art/view/${newView}`).then((response) => {
             setArtToDisplay(response.data);
             let items = []
             for (var i = 0; i < response.data.length; i++) {
@@ -117,7 +117,7 @@ function ArtTable() {
 
         handleDeleteClose(index);
         handleReviewClose(index);
-        axios.delete(`http://localhost:3001/admin/art/remove/${affectedArtId}`).then(() => {
+        axios.delete(`${process.env.REACT_APP_BACKEND_API_URL}/admin/art/remove/${affectedArtId}`).then(() => {
             setArtToDisplay(artToDisplay.filter((value) => {
                 return value.art_id !== affectedArtId;
             }));

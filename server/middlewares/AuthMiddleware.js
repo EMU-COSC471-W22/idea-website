@@ -10,7 +10,7 @@ const validateToken = (req, res, next) => {
     }
 
     try {
-        const validToken = verify(accessToken, "PguaV3eQcaK3MBc");
+        const validToken = verify(accessToken, `${process.env.JWT_SECRET}`);
         req.user = validToken;
         if (validToken) {
             return next();

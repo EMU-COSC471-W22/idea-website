@@ -37,7 +37,7 @@ function Gallery() {
         items[index] = true;
         setShow(items);
         setCurrentArtId(artId);
-        axios.get(`http://localhost:3001/comments/${artId}`).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_API_URL}/comments/${artId}`).then((response) => {
             setComments(response.data);
         });
     }
@@ -45,7 +45,7 @@ function Gallery() {
     useEffect(() => {
 
         /* On first render, this accesses all of the data from the artpieces table that have the 'accepted' status */
-        axios.get("http://localhost:3001/gallery").then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_API_URL}/gallery`).then((response) => {
             setArtPieces(response.data);
             let items = []
             for (var i = 0; i < response.data.length; i++) {
@@ -58,7 +58,7 @@ function Gallery() {
 
     const addComment = () => {
         if (newComment !== "") {
-            axios.post("http://localhost:3001/comments", 
+            axios.post(`${process.env.REACT_APP_BACKEND_API_URL}/comments`, 
             {
                 commentBody: newComment, 
                 artId: currentArtId
@@ -88,7 +88,7 @@ function Gallery() {
     }
 
     const deleteComment = (id) => {
-        axios.delete(`http://localhost:3001/comments/${id}`, 
+        axios.delete(`${process.env.REACT_APP_BACKEND_API_URL}/comments/${id}`, 
         {
             headers: {
                 accessToken: localStorage.getItem("accessToken")
@@ -105,6 +105,7 @@ function Gallery() {
         <div  >
             <h1 className='text-center m-5'>Gallery</h1>
             <div style={{ margin: 'auto', width: '80%', paddingTop: '3%' }}>
+            {(artPieces.length === 0) ? <h1 className='text-center m-5'>There are currently no art pieces in the gallery...</h1> :
             <Row xs={1} sm={1} md={2} lg={3} className="g-4">
                 {artPieces.map((value, index) => {
                     return (
@@ -184,7 +185,7 @@ function Gallery() {
                             </Modal>
                         </Col>
                 )})}
-            </Row>
+            </Row>}
             </div>
         </div>
         
