@@ -44,7 +44,7 @@ function AccountsTable() {
     useEffect(() => {
 
         /* On first render, access all of the accounts from the database */
-        axios.get("http://localhost:3001/admin/accounts").then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_API_URL}/admin/accounts`).then((response) => {
             setAccounts(response.data);
             let items = []
             for (var i = 0; i < response.data.length; i++) {
@@ -58,7 +58,7 @@ function AccountsTable() {
     const changeType = (affectedUsername, index) => {
         /* Only changes the type for the account if the field is not blank */
         if (newType.replace(/\s+/g, "") !== "") {
-            axios.put("http://localhost:3001/admin/account/changetype", {type: newType, username: affectedUsername});
+            axios.put(`${process.env.REACT_APP_BACKEND_API_URL}/admin/account/changetype`, {type: newType, username: affectedUsername});
 
             /* Optimistic rendering to update the type in the front end */
             setAccounts(accounts.map((value, key) => {
@@ -82,7 +82,7 @@ function AccountsTable() {
         alert(affectedUsername + " will be deleted");
 
         /* Contact the database to delete a user from the database */
-        axios.delete(`http://localhost:3001/admin/account/remove/${affectedUsername}`).then(() => {
+        axios.delete(`${process.env.REACT_APP_BACKEND_API_URL}/admin/account/remove/${affectedUsername}`).then(() => {
             
             /* Optimistic rendering to remove the deleted user */
             setAccounts(accounts.filter((value) => {

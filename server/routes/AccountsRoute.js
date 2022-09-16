@@ -71,7 +71,7 @@ router.post("/login", async (req, res) => {
                 res.send({error: "The password does not match the username."});
             } else {
                 /* Login was successful */
-                const accessToken = sign({username: user[0].username, type: user[0].type, firstName: user[0].first_name, lastName: user[0].last_name}, "PguaV3eQcaK3MBc");
+                const accessToken = sign({username: user[0].username, type: user[0].type, firstName: user[0].first_name, lastName: user[0].last_name}, `${process.env.JWT_SECRET}`);
                 res.send(accessToken);
             }
         });
